@@ -7,40 +7,39 @@ import { TbOvalVertical } from "react-icons/tb";
 import { PiPolygonLight } from "react-icons/pi";
 import { AiOutlineSave } from "react-icons/ai";
 import { FiUpload } from "react-icons/fi";
-import { exp } from "three/tsl";
-const Geometry = ({name}) => {
 
-    let icon = null
-    if (name === "Line") {
-       icon = <TbLine />;
-    }
-    if (name === "Circle") {
-       icon = <GoCircle />;
-    }
-    if (name === "Ellipse") {
-       icon = <TbOvalVertical />;
-    }
-    if (name === "Polyline") {
-       icon = <PiPolygonLight />;
-    }
-    if(name === "Save"){
-        icon = <AiOutlineSave />
-    }
-    if(name === "Upload"){
-        icon =<FiUpload />
-
-    }
-     const returnName = ()=>{return name}
+const Geometry = ({ name, onClick }) => {
+  let icon = null;
+  if (name === "Line") {
+    icon = <TbLine />;
+  }
+  if (name === "Circle") {
+    icon = <GoCircle />;
+  }
+  if (name === "Ellipse") {
+    icon = <TbOvalVertical />;
+  }
+  if (name === "Polyline") {
+    icon = <PiPolygonLight />;
+  }
+  if (name === "Save") {
+    icon = <AiOutlineSave />;
+  }
+  if (name === "Upload") {
+    icon = <FiUpload />;
+  }
 
   return (
-    <><div className="flex flex-col items-center mx-2  w-20  " onClick={returnName}>
+    <>
+      <div
+        className="flex flex-col items-center mx-2  w-20  "
+        onClick={onClick}
+      >
         <div className="">{icon}</div>
         <div className="">{name}</div>
-    </div>
-      
+      </div>
     </>
-  )
-}
-
-export default Geometry
-
+  );
+};
+// export ;
+export default Geometry;

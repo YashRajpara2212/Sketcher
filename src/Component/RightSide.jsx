@@ -9,7 +9,7 @@ const RightSide = () => {
   //     setval
   // }
   return (
-    <div className="container flex-col  bg-gray-200 mx-3   min-h-screen rounded-xl w-[25%] ">
+    <div className="container flex-col absolute right-0 top-0 z-10 m-5  bg-gray-200 mx-3   min-h-screen rounded-xl w-[25%] ">
       <div className="text-2xl mt-3 ps-6 mb-1">Properties:</div>
       <div className="text-xl ps-6 mb-1">
         {}Polyline {}1
@@ -51,7 +51,9 @@ const RightSide = () => {
         <div className="w-2/3 p-1">RGB()</div>
         <div className="bg-white p-1 w-1/6 me-10">100%</div>
       </div> */}
-      <div className="ps-6 text-xl"><ColorComponent /></div>
+      <div className="ps-6 text-xl">
+        <ColorComponent />
+      </div>
       <div className="ps-6">
         <ButtonComponent name="Hide" />
       </div>

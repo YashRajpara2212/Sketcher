@@ -1,58 +1,159 @@
 import * as THREE from "three";
+import { shapeStore } from "../../ShapeStore";
 
 class Line {
-  constructor(scene, startPoint) {
+  constructor(scene, camera, renderer, plane) {
     this.scene = scene;
-    this.startPoint = startPoint;
-    this.endPoint = startPoint;
+    this.camera = camera;
+    this.renderer = renderer;
+    this.plane = plane;
+
+    this.mouse = new THREE.Vector2(); // Mouse position in normalized device coordinates
+    this.raycaster = new THREE.Raycaster(); // Raycaster for mouse picking
+    this.startPoint = null;
+    this.endPoint = null;
     this.startSphere = null;
-    this.endSphere = null;
-    this.finalSphere = null;
+    this.endShere = null;
 
-    // Create the geometry for the line
-    this.geometry = new THREE.BufferGeometry();
-    this.geometry.setFromPoints([this.startPoint, this.endPoint]);
-    // Create the material for the line
-    this.material = new THREE.LineBasicMaterial({ color: 0x0000ff });
-    // Create the line mesh and add it to the scene
-    this.line = new THREE.Line(this.geometry, this.material);
-    this.scene.add(this.line);
+    this.line = null; // The line object we will draw
+    this.isDrawing = false;
 
-    this.startSphere = this.createSphere(this.startPoint);
+    // Bind event listeners
+    this.handleMouseDown = this.handleMouseDown.bind(this);
+    this.handleMouseMove = this.handleMouseMove.bind(this);
+    // this.handleMouseUp = this.handleMouseUp.bind(this);
+
+    this.addEventListeners();
+  }
+
+  // Add mouse event listeners
+  addEventListeners() {
+    this.renderer.domElement.addEventListener(
+      "mousedown",
+      this.handleMouseDown
+    );
+    this.renderer.domElement.addEventListener(
+      "mousemove",
+      this.handleMouseMove
+    );
+    this.renderer.domElement.addEventListener("mouseup", this.handleMouseUp);
+  }
+
+  // Remove event listeners (cleanup)
+  removeEventListeners() {
+    this.renderer.domElement.removeEventListener(
+      "mousedown",
+      this.handleMouseDown
+    );
+    this.renderer.domElement.removeEventListener(
+      "mousemove",
+      this.handleMouseMove
+    );
+    this.renderer.domElement.removeEventListener("mouseup", this.handleMouseUp);
+  }
+
+  // Update mouse position (from normalized device coordinates to world space)
+  updateMousePosition(event) {
+    this.mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+    this.mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+  }
+
+  // Handle mouse down event (start drawing line)
+  handleMouseDown(event) {
+    this.updateMousePosition(event);
+
+    // Get the intersection of the mouse with the plane (start point of line)
+    const intersects = this.getIntersection();
+    if (intersects.length > 0) {
+      if (!this.isDrawing) {
+        this.startPoint = intersects[0].point; // Save the start point
+
+        this.startSphere = this.createSphere(this.startPoint);
+        // console.log(this.startSphere, "sphere");
+        this.scene.add(this.startSphere);
+
+        this.endSphere = this.createSphere(this.startPoint);
+        this.scene.add(this.endSphere);
+        this.isDrawing = true; // Set drawing state to true
+      } else {
+        // On second click, finalize the line (finish drawing)
+        this.endPoint = intersects[0].point;
+        this.endSphere.position.copy(this.endPoint);
+
+        this.updateLine(); // Update the line to finalize it
+        this.isDrawing = false; // Reset drawing state
+
+        console.log("line ", this.line);
+        shapeStore.addShape(this.line);
+        this.line = null; // Optional: clear the line object to prevent future updates
+        this.removeEventListeners();
+      }
+    }
+  }
+
+  // Handle mouse move event (draw the line dynamically)
+  handleMouseMove(event) {
+    if (!this.isDrawing || !this.startPoint) return; // Only start drawing if we have a start point
+
+    this.updateMousePosition(event);
+
+    // Get the intersection of the mouse with the plane (update line endpoint)
+    const intersects = this.getIntersection();
+    if (intersects.length > 0) {
+      this.endPoint = intersects[0].point; // Update the end point
+
+      this.endSphere.position.copy(this.endPoint);
+
+      // Update or create the line in the scene
+      this.updateLine();
+    }
+  }
+
+  // Handle mouse up event (finalize line)
+  //   handleMouseUp(event) {
+  //     if (this.startPoint && this.endPoint) {
+  //       // Finalize the line and add it to the scene
+  //       this.scene.add(this.line);
+  //     }
+  //   }
+
+  // Get the intersection between the mouse and the plane
+  getIntersection() {
+    // this.raycaster.updateMatrixWorld(); // Ensure raycaster is up to date
+    // this.raycaster.setFromCamera(this.mouse,this.camera);
+    this.raycaster.setFromCamera(this.mouse, this.camera); // Set ray origin from camera
+    return this.raycaster.intersectObject(this.plane);
   }
 
   createSphere(position) {
-    const geometry = new THREE.SphereGeometry(0.1, 32, 32); // Small sphere
+    const geometry = new THREE.SphereGeometry(0.1, 32, 32);
     const material = new THREE.MeshBasicMaterial({ color: 0xff0000 });
     const sphere = new THREE.Mesh(geometry, material);
     sphere.position.set(position.x, position.y, position.z);
-    this.scene.add(sphere);
     return sphere;
   }
-
-  update(endPoint) {
-    // Update the end point of the line
-    this.endPoint = endPoint;
-
-    // Update the geometry to reflect the new end point
-    this.geometry.attributes.position.array[3] = endPoint.x;
-    this.geometry.attributes.position.array[4] = endPoint.y;
-    this.geometry.attributes.position.array[5] = endPoint.z;
-
-    // Mark the geometry as needing update
-    this.geometry.attributes.position.needsUpdate = true;
-
-    if (!this.endSphere) {
-      this.endSphere = this.createSphere(endPoint); // Green for moving endpoint
+  // Update the line geometry
+  updateLine() {
+    if (this.line) {
+      // If the line exists, just update the end point
+      // this.line.geometry.dispose();
+      this.line.geometry.setFromPoints([this.startPoint, this.endPoint]);
     } else {
-      this.endSphere.position.set(endPoint.x, endPoint.y, endPoint.z);
-    }
-  }
-  finalize() {
-    if (this.endSphere) {
-      this.finalSphere = this.createSphere(this.endSphere.position); // Blue for final endpoint
-      this.endSphere = null;
+      // If the line does not exist, create a new one
+      const material = new THREE.LineBasicMaterial({
+        color: 0x0000ff,
+        linewidth: 3,
+      });
+      const geometry = new THREE.BufferGeometry().setFromPoints([
+        this.startPoint,
+        this.endPoint,
+      ]);
+      this.line = new THREE.Line(geometry, material);
+
+      this.line.name = "Line";
+      this.scene.add(this.line);
     }
   }
 }
+
 export default Line;
