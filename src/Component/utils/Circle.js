@@ -110,19 +110,11 @@ class Circle {
     if (this.circle) {
       // If the circle exists, just update the radius
       // this.circle.geometry.dispose();
-      this.circle.geometry = new THREE.RingGeometry(
-        this.radius - 0.03,
-        this.radius,
-        32
-      );
+      this.circle.geometry = new THREE.CircleGeometry(this.radius, 64);
     } else {
       // If the circle does not exist, create a new one
 
-      const geometry = new THREE.RingGeometry(
-        this.radius - 0.03,
-        this.radius,
-        64
-      );
+      const geometry = new THREE.CircleGeometry(this.radius, 64);
       const material = new THREE.MeshBasicMaterial({
         color: 0x0000ff,
         side: THREE.DoubleSide,
@@ -132,6 +124,7 @@ class Circle {
       this.circle.position.set(this.center.x, 0.5, this.center.z);
       this.circle.name = "Circle";
       this.scene.add(this.circle);
+      console.log(this.circle);
     }
   }
 }

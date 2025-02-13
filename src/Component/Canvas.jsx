@@ -5,7 +5,7 @@ import Circle from "./utils/Circle";
 import Ellipse from "./utils/Ellipse";
 import Polyline from "./utils/Polyline";
 import * as THREE from "three";
-
+import { shapeStore } from "../ShapeStore";
 // import Point from "./utils/Point";
 
 const Canvas = ({ selectedShape }) => {
@@ -21,6 +21,8 @@ const Canvas = ({ selectedShape }) => {
     if (!sceneRef.current) {
       //scene
       const scene = new THREE.Scene();
+      //here scene is add to shapeStore for remove shape.
+      shapeStore.setScene(scene);
       sceneRef.current = scene;
 
       //camera

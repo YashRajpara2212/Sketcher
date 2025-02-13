@@ -6,12 +6,12 @@ import ShapeInfoComponent from "./ShapeInfoComponent";
 
 const LeftSide = observer(() => {
   const shapes = shapeStore.shapes;
-  console.log(shapes, "all shapes1");
+  // console.log(shapes, "all shapes1");
   const handleClick = (e) => {
     shapeStore.setEntity(e);
   };
   return (
-    <div className=" container absolute left-0 top-0 z-10 m-5  bg-gray-200 mx-3  min-h-screen rounded-xl w-[25%]">
+    <div className=" container absolute left-0 top-0 z-10 m-5  bg-gray-200 mx-3  min-h-[95vh] rounded-xl w-[25%]">
       <div className="flex p-3 justify-between text-2xl">
         <div className="col-10">List Of Created Object</div>
         <div className=" pt-2 pe-2 col-2">

@@ -109,18 +109,10 @@ class Line {
     }
   }
 
-  // Handle mouse up event (finalize line)
-  //   handleMouseUp(event) {
-  //     if (this.startPoint && this.endPoint) {
-  //       // Finalize the line and add it to the scene
-  //       this.scene.add(this.line);
-  //     }
-  //   }
-
+  
   // Get the intersection between the mouse and the plane
   getIntersection() {
-    // this.raycaster.updateMatrixWorld(); // Ensure raycaster is up to date
-    // this.raycaster.setFromCamera(this.mouse,this.camera);
+    
     this.raycaster.setFromCamera(this.mouse, this.camera); // Set ray origin from camera
     return this.raycaster.intersectObject(this.plane);
   }

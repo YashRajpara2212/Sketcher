@@ -9,8 +9,6 @@ import { shapeStore } from "../ShapeStore";
 // eslint-disable-next-line react/prop-types
 const ShapeInfoComponent = ({ shapeName, entityId }) => {
   let icon = null;
-  let entity = entityId;
-  console.log(entity, "ab");
 
   if (shapeName === "Line") {
     icon = <TbLine />;
@@ -25,9 +23,12 @@ const ShapeInfoComponent = ({ shapeName, entityId }) => {
     icon = <PiPolygonLight />;
   }
 
-  const handleHide = (entity) => {
-    // console.log(entityId, "entityid");
-    shapeStore.hideEntity(entity);
+  const handleHide = (id) => {
+    shapeStore.hideEntity(id);
+  };
+
+  const handleRemove = (id) => {
+    shapeStore.removeEntity(id);
   };
   return (
     <>
@@ -38,10 +39,10 @@ const ShapeInfoComponent = ({ shapeName, entityId }) => {
         </div>
 
         <div className="flex">
-          <div className="px-3  pt-1 " onClick={handleHide}>
+          <div className="px-3  pt-1 " onClick={() => handleHide(entityId)}>
             <IoEyeOutline />
           </div>
-          <div className="px-3 pt-1 ">
+          <div className="px-3 pt-1 " onClick={()=>handleRemove(entityId)}>
             <RiDeleteBinLine />
           </div>
         </div>
