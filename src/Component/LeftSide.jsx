@@ -6,7 +6,7 @@ import ShapeInfoComponent from "./ShapeInfoComponent";
 
 const LeftSide = observer(() => {
   const shapes = shapeStore.shapes;
-  // console.log(shapes, "all shapes1");
+  console.log(shapes, "all shapes1");
   const handleClick = (e) => {
     shapeStore.setEntity(e);
   };

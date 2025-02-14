@@ -72,6 +72,7 @@ class Circle {
         this.updateCircle(); // Update the circle to finalize it
         this.isDrawing = false; // Reset drawing state
         shapeStore.addShape(this.circle);
+        console.log(this.radius, "circle radius");
         this.circle = null; // Optional: clear the circle object to prevent future updates
         this.removeEventListeners();
       }
@@ -123,6 +124,8 @@ class Circle {
       this.circle.rotation.x = Math.PI * 0.5; // Rotate the ring to lie flat on the X-Y plane
       this.circle.position.set(this.center.x, 0.5, this.center.z);
       this.circle.name = "Circle";
+      this.circle.center = this.center;
+
       this.scene.add(this.circle);
       console.log(this.circle);
     }

@@ -14,7 +14,7 @@ class Ellipse {
     this.radiusY = 0; // Vertical radius (minor axis)
     this.ellipse = null; // The ellipse object
     this.isDrawing = false; // Track if the ellipse is being drawn
-
+    this.uuid = null;
     // Bind event listeners
     this.handleMouseDown = this.handleMouseDown.bind(this);
     this.handleMouseMove = this.handleMouseMove.bind(this);
@@ -72,6 +72,13 @@ class Ellipse {
         this.updateEllipse(); // Update the ellipse to finalize it
         this.isDrawing = false; // Reset drawing state
         shapeStore.addShape(this.ellipse);
+        shapeStore.setEllipseRadius(this.uuid, this.radiusX, this.radiusY);
+        // shapeStore.setEllipseRadiusX(this.uuid, this.radiusX);
+        // shapeStore.setEllipseRadiusY(this.uuid, this.radiusY);
+        console.log(this.ellipse, "elipse");
+        console.log(this.center, "elipse-center");
+        console.log(this.radiusX, "elipse-x");
+        console.log(this.radiusY, "elipse-y");
         this.ellipse = null; // Optional: clear the ellipse object to prevent future updates
         this.removeEventListeners();
       }
@@ -139,8 +146,19 @@ class Ellipse {
       const geometryBuffer = new THREE.BufferGeometry().setFromPoints(points); // Create geometry from points
       this.ellipse = new THREE.LineLoop(geometryBuffer, material); // Create a LineLoop for ellipse
       this.ellipse.rotation.x = Math.PI * 0.5; // Rotate the ellipse to lie flat on the X-Y plane
-      this.ellipse.position.set(this.center.x, 0.5, this.center.z); // Set position to center
+      this.ellipse.position.set(
+        this.center.x,
+        this.center.y + 0.01,
+        this.center.z
+      ); // Set position to center
       this.ellipse.name = "Ellipse";
+
+      this.ellipse.center = this.center;
+      // console.log(this.ellipse, "ellipse");
+
+      this.uuid = this.ellipse.uuid;
+      console.log(this.uuid, "ellipse-uuid");
+
       this.scene.add(this.ellipse);
     }
   }
