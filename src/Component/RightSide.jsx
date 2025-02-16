@@ -86,7 +86,7 @@ const RightSide = observer(() => {
   }, [entity]);
   // console.log(color, "color");
   // console.log(entity, "entity in right side");
-
+  console.log(shapeStore.scene, "last scene");
   //handler
   const handleLineStartChange = (axis, value) => {
     const axisIndex = axis === "x" ? 0 : axis === "y" ? 1 : 2;
@@ -159,6 +159,7 @@ const RightSide = observer(() => {
     shapeStore.hideEntity(id);
   };
 
+  console.log(shapeStore.shapes, "all shapes");
   const handleRemove = (id) => {
     shapeStore.removeEntity(id);
     shapeStore.setEntity(null);
@@ -193,6 +194,7 @@ const RightSide = observer(() => {
   //     return {
   //       x: points[index * 3],
   //       y: points[index * 3 + 1],
+
   //       z: points[index * 3 + 2],
   //     };
   //   }

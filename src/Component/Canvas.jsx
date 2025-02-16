@@ -55,6 +55,7 @@ const Canvas = ({ selectedShape }) => {
 
       const plane = new THREE.Mesh(geometry, material);
       plane.rotation.x = -Math.PI * 0.5;
+      plane.name = "Plane";
       sceneRef.current.add(plane);
       planeRef.current = plane;
     }
