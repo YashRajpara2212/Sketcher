@@ -15,6 +15,7 @@ class Line {
     this.startSphere = null;
     this.endShere = null;
 
+    // this.flag = true;
     this.line = null; // The line object we will draw
     this.isDrawing = false;
 
@@ -65,6 +66,7 @@ class Line {
     // Get the intersection of the mouse with the plane (start point of line)
     const intersects = this.getIntersection();
     if (intersects.length > 0) {
+      //&& this.flag
       if (!this.isDrawing) {
         this.startPoint = intersects[0].point; // Save the start point
 
@@ -86,6 +88,7 @@ class Line {
         console.log("line ", this.line);
         shapeStore.addShape(this.line);
         this.line = null; // Optional: clear the line object to prevent future updates
+        // this.flag = false;
         this.removeEventListeners();
       }
     }
@@ -109,10 +112,8 @@ class Line {
     }
   }
 
-  
   // Get the intersection between the mouse and the plane
   getIntersection() {
-    
     this.raycaster.setFromCamera(this.mouse, this.camera); // Set ray origin from camera
     return this.raycaster.intersectObject(this.plane);
   }
@@ -134,7 +135,7 @@ class Line {
       // If the line does not exist, create a new one
       const material = new THREE.LineBasicMaterial({
         color: 0x0000ff,
-        linewidth: 3,
+        // linewidth: 3,
       });
       const geometry = new THREE.BufferGeometry().setFromPoints([
         this.startPoint,

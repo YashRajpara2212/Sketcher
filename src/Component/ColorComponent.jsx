@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { observer } from "mobx-react";
 
 const ColorComponent = observer(
-  ({ value, onColorChange, opacity, setOpacity }) => {
+  ({ value, onColorChange, opacity, handleOpacity }) => {
     const [hexColor, setHexColor] = useState(value);
 
     useEffect(() => {
@@ -58,9 +58,9 @@ const ColorComponent = observer(
     };
 
     const handleOpacityChange = (event) => {
-      setOpacity(event.target.value);
+      handleOpacity(event.target.value);
     };
-
+    console.log(opacity, "opacity");
     return (
       <>
         <div className="text-xl flex  mt-2 gap-5">
@@ -76,9 +76,7 @@ const ColorComponent = observer(
               className="w-4/5 bg-gray-100"
               type="number"
               value={opacity}
-              onChange={(event)=>handleOpacityChange(event)}
-              min="0"
-              max="100"
+              onChange={(event) => handleOpacityChange(event)}
             />
           </div>
         </div>

@@ -4,15 +4,17 @@ import ColorComponent from "./ColorComponent";
 import { useState, useEffect } from "react";
 import { observer } from "mobx-react";
 import { shapeStore } from "../ShapeStore";
+// import * as THREE from "three";
 
 const RightSide = observer(() => {
+  // const [entity, setEntity] = useState(shapeStore.Entity());
   const entity = shapeStore.Entity();
-  console.log(
-    entity?.material.color.r,
-    entity?.material.color.g,
-    entity?.material.color.b,
-    "color"
-  );
+  // console.log(
+  //   entity?.material.color.r,
+  //   entity?.material.color.g,
+  //   entity?.material.color.b,
+  //   "color"
+  // );
   // let circleCenter = null;
   // let circleRadius = null;
   // let Rx = null;
@@ -143,10 +145,46 @@ const RightSide = observer(() => {
 
   const handleColor = (value) => {
     setColor(value);
-    if (entity?.material) {
-      entity.material.color.setRGB(value.r / 255, value.g / 255, value.b / 255);
-    }
+    // if (entity?.material) {
+    //   entity.material.color.setRGB(value.r / 255, value.g / 255, value.b / 255);
+    // }
   };
+
+  const handleOpacity = (value) => {
+    setOpacity(Math.max(0, Math.min(100, value)));
+
+    // setOpacity(value)
+  };
+  const handleHide = (id) => {
+    shapeStore.hideEntity(id);
+  };
+
+  const handleRemove = (id) => {
+    shapeStore.removeEntity(id);
+    shapeStore.setEntity(null);
+    // setEntity(null);
+  };
+
+  const handleUpdate = (entityId) => {
+    const updatedProperties = {
+      color,
+      opacity,
+      lineStart,
+      lineEnd,
+      ellipseCenter,
+      Rx,
+      Ry,
+      circleCenter,
+      circleRadius,
+      polylinePoints,
+    };
+
+    shapeStore.updateEntity(entityId, updatedProperties); // Pass the updated properties to the store
+  };
+
+  // const handleUpdate = (id) => {
+  //   shapeStore.updateEntity(id); // Pass the ID of the selected entity to update its properties
+  // };
 
   // const points = entity?.geometry.attributes.position.array;
 
@@ -332,7 +370,11 @@ const RightSide = observer(() => {
               )} */}
             </div>
           )}
-          <ButtonComponent name="Update" />
+          <ButtonComponent
+            name="Update"
+            entityID={entity.uuid}
+            handleClick={handleUpdate}
+          />
           <div className="text-xl">Color</div>
           <ColorComponent
             value={rgbToHex(color.r, color.g, color.b)}
@@ -340,13 +382,21 @@ const RightSide = observer(() => {
               handleColor(value);
             }}
             opacity={opacity}
-            setOpacity={setOpacity}
+            handleOpacity={handleOpacity}
           />
           {/* <div>
             <input type="color" />
           </div> */}
-          <ButtonComponent name="Hide" />
-          <ButtonComponent name="Delete" />
+          <ButtonComponent
+            name="Hide"
+            entityID={entity.uuid}
+            handleClick={handleHide}
+          />
+          <ButtonComponent
+            name="Delete"
+            entityID={entity.uuid}
+            handleClick={handleRemove}
+          />
         </>
       ) : (
         <div className="text-xl">Select a shape to see its properties.</div>
@@ -356,48 +406,3 @@ const RightSide = observer(() => {
 });
 
 export default RightSide;
-
-{
-  /* <div className="ps-6 flex">
-        <div className="w-1/6 p-1">
-          <input type="color" />
-        </div>
-        <div className="w-2/3 p-1">RGB()</div>
-        <div className="bg-white p-1 w-1/6 me-10">100%</div>
-      </div> */
-}
-
-// if (entity?.name === "Circle") {
-//   setCircleCenter(entity.center);
-//   setCircleRadius(entity.geometry.parameters.radius);
-//   // circleRadius = entity.geometry.parameters.radius;
-//   // circleCenter = entity.center;
-// }
-// if (entity?.name === "Ellipse") {
-//   const ellipseRadius = shapeStore.getEllipseRadius(entity?.uuid);
-//   setEllipseCenter(entity.position);
-//   setRx(ellipseRadius[0]);
-//   setRy(ellipseRadius[1]);
-//   // ellipseCenter = entity.position;
-//   // ellipseRadius = shapeStore.getEllipseRadius(entity?.uuid);
-//   // Rx = ellipseRadius[0];
-//   // Ry = ellipseRadius[1];
-
-//   // console.log(shapeStore.getEllipseRadius(entity?.uuid), "radius");
-// }
-// if (entity?.name === "Line") {
-//   setLineStart(entity.geometry.attributes.position.array.slice(0, 3));
-//   setLineEnd(entity.geometry.attributes.position.array.slice(3, 6));
-// }
-
-// if (entity?.name === "Polyline") {
-//   const points = entity.geometry.attributes.position.array;
-//   const polylinePoints = Array.from({ length: (points.length - 6) / 3 }).map(
-//     (_, index) => ({
-//       x: points[index * 3],
-//       y: points[index * 3 + 1],
-//       z: points[index * 3 + 2],
-//     })
-//   );
-//   setPolylinePoints(polylinePoints);
-// }

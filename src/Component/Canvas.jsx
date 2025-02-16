@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 // import { RiExpandUpDownFill } from "react-icons/ri";
 import Line from "./utils/Line";
 import Circle from "./utils/Circle";
@@ -9,6 +9,8 @@ import { shapeStore } from "../ShapeStore";
 // import Point from "./utils/Point";
 
 const Canvas = ({ selectedShape }) => {
+  // const [shape, setShape] = useState(null);
+  // setShape(selectedShape);
   const shape = selectedShape;
   console.log(shape, "selected Shape");
   const canvasRef = useRef(null);
@@ -16,6 +18,9 @@ const Canvas = ({ selectedShape }) => {
   const sceneRef = useRef(null);
   const planeRef = useRef(null);
   const rendererRef = useRef(null);
+  //
+  const [mouse] = useState(new THREE.Vector2());
+  const raycaster = new THREE.Raycaster();
 
   useEffect(() => {
     if (!sceneRef.current) {
@@ -93,11 +98,28 @@ const Canvas = ({ selectedShape }) => {
       );
     }
 
+    const selectShape = (event) => {
+      mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+      mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+
+      raycaster.params.Line.threshold = 2.3;
+      raycaster.setFromCamera(mouse, cameraRef.current);
+      const intersects = raycaster.intersectObjects(shapeStore.shapes);
+      if (intersects.length > 0) {
+        const canvasSelectedShape = intersects[0];
+        console.log(canvasSelectedShape, "shape");
+        shapeStore.setEntity(canvasSelectedShape.object);
+        console.log(shapeStore?.Entity(), "current");
+      }
+    };
+
     const animate = () => {
       requestAnimationFrame(animate);
       rendererRef.current.render(sceneRef.current, cameraRef.current);
     };
 
+    const canvas = canvasRef.current;
+    canvas.addEventListener("click", selectShape);
     animate();
     // Cleanup function to be executed when the component unmounts
     return () => {
@@ -105,6 +127,7 @@ const Canvas = ({ selectedShape }) => {
         // Call any cleanup methods on the shape instance
         shapeInstance.removeEventListeners();
       }
+      canvas.removeEventListener("click", selectShape);
     };
   }, [shape]);
 

@@ -1,4 +1,5 @@
 import { makeAutoObservable } from "mobx";
+import * as THREE from "three";
 
 class ShapeStore {
   shapes = [];
@@ -112,7 +113,133 @@ class ShapeStore {
 
       console.log(this.scene, "scene2");
       this.shapes = this.shapes.filter((e) => e.uuid !== entityId);
+      if (this.currentEntity?.uuid === entityId) {
+        this.currentEntity = null; // Clear selection if the selected shape is removed
+      }
     }
+  }
+
+  updateEntity(entityId, updatedProperties) {
+    const updateShape = this.shapes.find((e) => e.uuid === entityId);
+
+    if (!updateShape) return; // If no shape is found, exit early
+
+    const {
+      color,
+      opacity,
+      lineStart,
+      lineEnd,
+      ellipseCenter,
+      Rx,
+      Ry,
+      circleCenter,
+      circleRadius,
+      polylinePoints,
+    } = updatedProperties;
+
+    // Line update
+    if (updateShape.name === "Line") {
+      const newGeometry = new THREE.BufferGeometry();
+      const positions = new Float32Array([...lineStart, ...lineEnd]); // Create a new array with updated line positions
+      newGeometry.setAttribute(
+        "position",
+        new THREE.BufferAttribute(positions, 3)
+      );
+
+      updateShape.geometry.dispose(); // Dispose of the old geometry
+      updateShape.geometry = newGeometry; // Assign the new geometry
+
+      // Update color and opacity
+      updateShape.material.color.setRGB(
+        color.r / 255,
+        color.g / 255,
+        color.b / 255
+      );
+      updateShape.material.opacity = opacity / 100;
+      updateShape.material.needsUpdate = true; // Ensure material updates
+    }
+
+    // Ellipse update
+    if (updateShape.name === "Ellipse") {
+      updateShape.position.set(
+        ellipseCenter.x,
+        ellipseCenter.y,
+        ellipseCenter.z
+      );
+      const curve = new THREE.EllipseCurve(
+        0,
+        0, // center at 0, 0
+        Rx,
+        Ry, // rx and ry values from updatedProperties
+        0,
+        Math.PI * 2, // full circle
+        false,
+        0 // no rotation
+      );
+
+      const ellipseGeometry = new THREE.BufferGeometry().setFromPoints(
+        curve.getPoints(64)
+      );
+
+      updateShape.geometry.dispose(); // Dispose of the old geometry
+      updateShape.geometry = ellipseGeometry; // Set the new geometry
+
+      // Update color and opacity
+      updateShape.material.color.setRGB(
+        color.r / 255,
+        color.g / 255,
+        color.b / 255
+      );
+      updateShape.material.opacity = opacity / 100;
+      updateShape.material.needsUpdate = true;
+    }
+
+    // Circle update
+    if (updateShape.name === "Circle") {
+      updateShape.position.set(circleCenter.x, 0.5, circleCenter.z);
+      updateShape.geometry.parameters.radius = circleRadius; // Update radius
+
+      updateShape.geometry.dispose(); // Dispose of the old geometry
+      updateShape.geometry = new THREE.CircleGeometry(circleRadius); // Create a new geometry with updated radius
+
+      // Update color and opacity
+      updateShape.material.color.setRGB(
+        color.r / 255,
+        color.g / 255,
+        color.b / 255
+      );
+      updateShape.material.opacity = opacity / 100;
+      updateShape.material.needsUpdate = true;
+    }
+
+    // Polyline update
+    if (updateShape.name === "Polyline") {
+      const pointsArray = polylinePoints.flatMap((point) => [
+        point.x,
+        point.y,
+        point.z,
+      ]);
+      const newGeometry = new THREE.BufferGeometry();
+      newGeometry.setAttribute(
+        "position",
+        new THREE.Float32BufferAttribute(pointsArray, 3)
+      );
+
+      updateShape.geometry.dispose(); // Dispose of the old geometry
+      updateShape.geometry = newGeometry; // Set the new geometry
+
+      // Update color and opacity
+      updateShape.material.color.setRGB(
+        color.r / 255,
+        color.g / 255,
+        color.b / 255
+      );
+      updateShape.material.opacity = opacity / 100;
+      updateShape.material.needsUpdate = true;
+    }
+
+    // Ensure shape visibility is updated
+    // updateShape.visible = updateShape.visible;
   }
 
   // Helper function to dispose of shape's resources
@@ -132,3 +259,19 @@ class ShapeStore {
 }
 
 export const shapeStore = new ShapeStore();
+
+// updateEntity(entityId) {
+//   const updateShape = this.shapes.find((e) => e.uuid == entityId);
+//   if (updateShape.name === "Line") {
+//     updateShape.geometry.attributes.position.array = [
+//       ...lineStart,
+//       ...lineEnd,
+//     ];
+//   }
+//   if (updateShape.name === "Circle") {
+//   }
+//   if (updateShape.name === "Polyline") {
+//   }
+//   if (updateShape.name === "Ellipse") {
+//   }
+// }

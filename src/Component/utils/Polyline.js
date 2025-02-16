@@ -176,14 +176,13 @@ class Polyline {
     this.renderer = renderer;
     this.plane = plane;
 
-    this.mouse = new THREE.Vector2(); // Mouse position in normalized device coordinates
-    this.raycaster = new THREE.Raycaster(); // Raycaster for mouse picking
-    this.points = []; // Store the points of the polyline
-    this.isDrawing = false; // Track if a new line segment is being drawn
-    this.line = null; // Store the current line object
-    this.polyline = null; // Store the polyline
-    this.previousPoint = null; // Keep track of the last point in the polyline
-
+    this.mouse = new THREE.Vector2();
+    this.raycaster = new THREE.Raycaster();
+    this.points = [];
+    this.isDrawing = false;
+    this.line = null;
+    this.previousPoint = null;
+    
     // Bind event listeners
     this.handleMouseDown = this.handleMouseDown.bind(this);
     this.handleMouseMove = this.handleMouseMove.bind(this);
@@ -205,7 +204,7 @@ class Polyline {
     this.renderer.domElement.addEventListener(
       "dblclick",
       this.handleDoubleClick
-    ); // Listen for double-click to finalize
+    ); // Finalize on double-click
   }
 
   // Remove event listeners (cleanup)
@@ -225,10 +224,6 @@ class Polyline {
   }
 
   // Update mouse position (from normalized device coordinates to world space)
-
-  // const rect = this.renderer.domElement.getBoundingClientRect();
-  //((event.clientX - rect.left) / rect.width) * 2 - 1;
-  //-((event.clientY - rect.top) / rect.height) * 2 + 1;
   updateMousePosition(event) {
     this.mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
     this.mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
@@ -244,7 +239,7 @@ class Polyline {
       const currentPoint = intersects[0].point;
 
       if (!this.isDrawing) {
-        // Start drawing the polyline with the first point
+        // Start drawing the polyline from this point
         this.startNewPolyline(currentPoint);
         this.isDrawing = true;
       } else {
@@ -288,7 +283,6 @@ class Polyline {
     const geometry = new THREE.BufferGeometry().setFromPoints(this.points);
     const material = new THREE.LineBasicMaterial({ color: 0x0000ff });
     this.polyline = new THREE.Line(geometry, material);
-    this.polyline.position.y = 0.5;
     this.polyline.name = "Polyline";
     this.scene.add(this.polyline); // Add the polyline to the scene
   }
