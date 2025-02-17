@@ -30,13 +30,17 @@ const NavigationBar = observer(({ onUpload }) => {
     fileInputRef.current.click();
     event.target.value = null;
   };
-
+  const isSelected = (shape) => shapeStore.selectedShape === shape;
   // };
   return (
     <>
       <div className="container absolute left-[26%] w-[50%] top-0 m-5 z-10 flex h-[85px] text-2xl ">
         <div className=" flex bg-gray-100 rounded-2xl py-3 px-3 ms-10 bg-gray-200">
-          <div className="hover:bg-white rounded-xl">
+          <div
+            className={`hover:bg-white rounded-xl ${
+              isSelected("Line") ? "bg-white" : ""
+            }`}
+          >
             <Geometry
               onClick={() => {
                 shapeStore.setSelectedShape("Line");
@@ -44,7 +48,7 @@ const NavigationBar = observer(({ onUpload }) => {
               name="Line"
             />
           </div>
-          <div className="hover:bg-white rounded-xl">
+          <div className={`hover:bg-white rounded-xl ${isSelected("Circle") ? "bg-white" : ""}`}>
             <Geometry
               name="Circle"
               onClick={() => {
@@ -52,7 +56,7 @@ const NavigationBar = observer(({ onUpload }) => {
               }}
             />
           </div>
-          <div className="hover:bg-white rounded-xl">
+          <div className={`hover:bg-white rounded-xl ${isSelected("Ellipse") ? "bg-white" : ""}`}>
             <Geometry
               name="Ellipse"
               onClick={() => {
@@ -60,7 +64,7 @@ const NavigationBar = observer(({ onUpload }) => {
               }}
             />
           </div>
-          <div className="hover:bg-white rounded-xl">
+          <div className={`hover:bg-white rounded-xl ${isSelected("Polyline") ? "bg-white" : ""}`}>
             <Geometry
               name="Polyline"
               onClick={() => {

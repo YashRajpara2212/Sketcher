@@ -1,3 +1,4 @@
+// export default Polyline;
 import * as THREE from "three";
 import { shapeStore } from "../../ShapeStore";
 
@@ -12,7 +13,8 @@ class Polyline {
     this.raycaster = new THREE.Raycaster();
     this.points = [];
     this.isDrawing = false;
-    this.line = null;
+    this.polyline = null; // This will hold the final polyline
+    this.tempLine = null; // Temporary line that will be drawn during mouse move
     this.previousPoint = null;
 
     // Bind event listeners
@@ -75,7 +77,7 @@ class Polyline {
         this.startNewPolyline(currentPoint);
         this.isDrawing = true;
       } else {
-        // Add a new line segment from the last point to the current point
+        // Add a new line segment to the polyline
         this.addLineSegment(currentPoint);
       }
 
@@ -83,17 +85,24 @@ class Polyline {
     }
   }
 
-  // Handle mouse move event (update the line dynamically)
+  // Handle mouse move event (draw the temporary line without affecting the polyline)
   handleMouseMove(event) {
-    if (!this.isDrawing || !this.previousPoint) return; // Only update if a line is being drawn
+    if (!this.isDrawing || !this.previousPoint) return; // Only show temporary line if drawing
 
     this.updateMousePosition(event);
 
-    // Get the intersection of the mouse with the plane (update line end point)
+    // Get the intersection of the mouse with the plane (update temporary line end point)
     const intersects = this.getIntersection();
     if (intersects.length > 0) {
       const currentPoint = intersects[0].point;
-      this.updateLastLineSegment(currentPoint); // Update the current line segment
+
+      // If we already have a temporary line, update it dynamically
+      if (this.tempLine) {
+        this.updateTemporaryLine(currentPoint); // Update the temporary line
+      } else {
+        // Create a temporary line from the previous point to the mouse position
+        this.createTemporaryLine(currentPoint);
+      }
     }
   }
 
@@ -102,6 +111,8 @@ class Polyline {
     this.isDrawing = false; // Stop drawing new line segments
     shapeStore.addShape(this.polyline); // Add the final polyline to the scene
     shapeStore.setSelectedShape(null);
+    console.log(this.polyline, "polyline");
+    this.polyline = null;
     this.removeEventListeners(); // Remove event listeners
   }
 
@@ -133,12 +144,36 @@ class Polyline {
     this.polyline.geometry = geometry; // Update the geometry of the polyline
   }
 
-  // Update the last line segment being drawn dynamically as the mouse moves
-  updateLastLineSegment(currentPoint) {
-    if (this.points.length > 0) {
-      // Update the last segment
-      this.points[this.points.length - 1] = currentPoint;
-      this.updatePolyline();
+  // Create the temporary line that follows the mouse during movement
+  createTemporaryLine(currentPoint) {
+    const geometry = new THREE.BufferGeometry().setFromPoints([
+      this.previousPoint,
+      currentPoint,
+    ]);
+    const material = new THREE.LineBasicMaterial({ color: 0x0000ff }); // Green color for the temporary line
+    this.tempLine = new THREE.Line(geometry, material);
+    this.scene.add(this.tempLine);
+  }
+
+  // Update the temporary line segment as the mouse moves
+  updateTemporaryLine(currentPoint) {
+    if (this.tempLine) {
+      const geometry = new THREE.BufferGeometry().setFromPoints([
+        this.previousPoint,
+        currentPoint,
+      ]);
+      this.tempLine.geometry.dispose(); // Dispose of old geometry
+      this.tempLine.geometry = geometry; // Update geometry with the new end point
+    }
+  }
+
+  // Remove and dispose of the given temporary line
+  removeAndDisposeTemporaryLine() {
+    if (this.tempLine) {
+      this.scene.remove(this.tempLine); // Remove from scene
+      this.tempLine.geometry.dispose(); // Dispose geometry
+      this.tempLine.material.dispose(); // Dispose material
+      this.tempLine = null; // Clear the reference
     }
   }
 
@@ -149,4 +184,3 @@ class Polyline {
 }
 
 export default Polyline;
-

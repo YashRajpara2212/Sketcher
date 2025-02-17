@@ -51,7 +51,7 @@ const Canvas = () => {
     if (!planeRef.current) {
       const geometry = new THREE.PlaneGeometry(10000, 10000);
       const material = new THREE.MeshBasicMaterial({
-        color: "yellow",
+        color: "white",
       });
 
       const plane = new THREE.Mesh(geometry, material);

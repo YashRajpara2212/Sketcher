@@ -60,7 +60,7 @@ const RightSide = observer(() => {
     if (entity?.name === "Polyline") {
       const points = entity.geometry.attributes.position.array;
       const polylinePoints = Array.from({
-        length: (points.length - 6) / 3,
+        length: (points.length - 3) / 3,
       }).map((_, index) => ({
         x: points[index * 3],
         y: points[index * 3 + 1],

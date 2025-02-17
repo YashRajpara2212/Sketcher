@@ -69,7 +69,7 @@ class Circle {
         shapeStore.setSelectedShape(null);
         console.log(this.radius, "circle radius");
         this.circle = null;
-        // this.removeEventListeners();
+        this.removeEventListeners();
       }
     }
   }

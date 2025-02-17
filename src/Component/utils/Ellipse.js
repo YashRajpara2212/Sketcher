@@ -71,10 +71,10 @@ class Ellipse {
         shapeStore.setSelectedShape(null);
         shapeStore.setEllipseRadius(this.uuid, this.radiusX, this.radiusY);
 
-        console.log(this.ellipse, "elipse");
-        console.log(this.center, "elipse-center");
-        console.log(this.radiusX, "elipse-x");
-        console.log(this.radiusY, "elipse-y");
+        // console.log(this.ellipse, "elipse");
+        // console.log(this.center, "elipse-center");
+        // console.log(this.radiusX, "elipse-x");
+        // console.log(this.radiusY, "elipse-y");
         this.ellipse = null; // Optional: clear the ellipse object to prevent future updates
         this.removeEventListeners();
       }
