@@ -24,13 +24,17 @@ const ShapeInfoComponent = observer(({ shapeName, entityId }) => {
     icon = <PiPolygonLight />;
   }
 
-  const handleHide = (id) => {
+  const handleHide = (id, e) => {
+    e.stopPropagation();
+
     shapeStore.hideEntity(id);
   };
 
-  const handleRemove = (id) => {
+  const handleRemove = (id, e) => {
+    e.stopPropagation();
+
     shapeStore.removeEntity(id);
-    shapeStore.setEntity(null);
+    // shapeStore.setEntity(null);
   };
   const currentEntity = shapeStore.Entity();
   // console.log(currentEntity, "cur");
@@ -50,10 +54,13 @@ const ShapeInfoComponent = observer(({ shapeName, entityId }) => {
         </div>
 
         <div className="flex">
-          <div className="px-3  pt-1 " onClick={() => handleHide(entityId)}>
+          <div className="px-3  pt-1 " onClick={(e) => handleHide(entityId, e)}>
             <IoEyeOutline />
           </div>
-          <div className="px-3 pt-1 " onClick={() => handleRemove(entityId)}>
+          <div
+            className="px-3 pt-1 "
+            onClick={(e) => handleRemove(entityId, e)}
+          >
             <RiDeleteBinLine />
           </div>
         </div>

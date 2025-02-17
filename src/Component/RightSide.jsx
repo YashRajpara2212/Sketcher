@@ -9,7 +9,7 @@ import { shapeStore } from "../ShapeStore";
 const RightSide = observer(() => {
   // const [entity, setEntity] = useState(null);
   const entity = shapeStore.Entity();
- 
+
   const [circleCenter, setCircleCenter] = useState({ x: 0, y: 0, z: 0 });
   const [circleRadius, setCircleRadius] = useState(null);
   const [ellipseCenter, setEllipseCenter] = useState({ x: 0, y: 0, z: 0 });
@@ -26,11 +26,21 @@ const RightSide = observer(() => {
     if (entity?.name === "Circle") {
       setCircleCenter(entity.center);
       setCircleRadius(entity.geometry.parameters.radius);
-      
     }
     if (entity?.name === "Ellipse") {
       const ellipseRadius = shapeStore.getEllipseRadius(entity?.uuid);
+
       console.log(ellipseRadius, "ellipse-radius");
+      // if (Array.isArray(ellipseRadius) && ellipseRadius.length >= 2) {
+      //   setEllipseCenter(entity.position);
+      //   setRx(ellipseRadius[0]);
+      //   setRy(ellipseRadius[1]);
+      // } else {
+      //   // If the radius is not valid, you can set default values or leave it as null
+      //   console.error("Invalid ellipse radius:", ellipseRadius);
+      //   setRx(null);
+      //   setRy(null);
+      // }
       setEllipseCenter(entity.position);
       setRx(ellipseRadius[0]);
       setRy(ellipseRadius[1]);
@@ -72,7 +82,7 @@ const RightSide = observer(() => {
       setOpacity(opacity);
     }
   }, [entity]);
- 
+
   console.log(shapeStore.scene, "last scene");
   //handler
   const handleLineStartChange = (axis, value) => {
@@ -82,8 +92,6 @@ const RightSide = observer(() => {
       newStart[axisIndex] = value; // Update the corresponding axis
       return newStart;
     });
-
-    
   };
 
   const handleLineEndChange = (axis, value) => {
@@ -132,7 +140,6 @@ const RightSide = observer(() => {
 
   const handleColor = (value) => {
     setColor(value);
-   
   };
 
   const handleOpacity = (value) => {
@@ -147,7 +154,7 @@ const RightSide = observer(() => {
   console.log(shapeStore.shapes, "all shapes");
   const handleRemove = (id) => {
     shapeStore.removeEntity(id);
-    shapeStore.setEntity(null);
+    // shapeStore.setEntity(null);
     // setEntity(null);
   };
 
@@ -167,8 +174,6 @@ const RightSide = observer(() => {
 
     shapeStore.updateEntity(entityId, updatedProperties); // Pass the updated properties to the store
   };
-
- 
 
   return (
     //container flex-col absolute right-0 top-0 z-10 m-5 p-5 bg-gray-200 mx-3   min-h-screen rounded-xl w-[25%]
@@ -199,7 +204,6 @@ const RightSide = observer(() => {
                   value={lineStart[2]} //{lineStart.z}
                   onChange={(value) => handleLineStartChange("z", value)}
                 />
-               
               </div>
               <div className="flex flex-col gap-4">
                 <div className="text-xl">Ending Point</div>
@@ -218,7 +222,6 @@ const RightSide = observer(() => {
                   value={lineEnd[2]} //{lineEnd.z}
                   onChange={(value) => handleLineEndChange("z", value)}
                 />
-               
               </div>
             </div>
           )}
@@ -241,7 +244,6 @@ const RightSide = observer(() => {
                   value={circleCenter.z}
                   onChange={(value) => handleCircleCenterChange("z", value)}
                 />
-             
               </div>
 
               <div>
@@ -274,7 +276,6 @@ const RightSide = observer(() => {
                   value={ellipseCenter.z}
                   onChange={(value) => handleEllipseCenterChange("z", value)}
                 />
-             
               </div>
               <div className="flex flex-col gap-4 mb-3 w-full">
                 <div className="text-xl">Radius</div>
@@ -288,7 +289,6 @@ const RightSide = observer(() => {
                   value={Ry}
                   onChange={handleEllipseRadiusYChange}
                 />
-            
               </div>
             </div>
           )}
@@ -320,7 +320,6 @@ const RightSide = observer(() => {
                   />
                 </div>
               ))}
-             
             </div>
           )}
           <ButtonComponent
@@ -337,7 +336,6 @@ const RightSide = observer(() => {
             opacity={opacity}
             handleOpacity={handleOpacity}
           />
-        
           <ButtonComponent
             name="Hide"
             entityID={entity.uuid}

@@ -66,9 +66,10 @@ class Circle {
         this.updateCircle();
         this.isDrawing = false;
         shapeStore.addShape(this.circle);
+        shapeStore.setSelectedShape(null);
         console.log(this.radius, "circle radius");
         this.circle = null;
-        this.removeEventListeners();
+        // this.removeEventListeners();
       }
     }
   }

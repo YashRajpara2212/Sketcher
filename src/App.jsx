@@ -9,7 +9,7 @@ import NavigationBar from "./Component/NavigationBar";
 import { shapeStore } from "./ShapeStore";
 
 function App() {
-  const [selectedShape, setSelectedShape] = useState("");
+  // const [selectedShape, setSelectedShape] = useState("");
   // const [uploadShapes, setUploadShapes] = useState([]);
 
   const handleUpload = (shapesData) => {
@@ -20,10 +20,12 @@ function App() {
   return (
     <>
       <div className="relative max-w-[100vw]">
-        <Canvas className="absolute" selectedShape={selectedShape} />
+        <Canvas className="absolute" />
         {/* <div className="main-container container-fluid  w-full  m-5  py-8 px-3 flex gap-4 absolute"> */}
         <LeftSide />
-        <NavigationBar setShape={setSelectedShape} onUpload={handleUpload} />
+        {/* <LeftSide /> */}
+        {/* <NavigationBar setShape={setSelectedShape} onUpload={handleUpload} /> */}
+        <NavigationBar onUpload={handleUpload} />
         <RightSide />
         {/* </div> */}
       </div>

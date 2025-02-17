@@ -4,7 +4,7 @@ import Geometry from "./Geometry";
 import { shapeStore } from "../ShapeStore";
 import { observer } from "mobx-react";
 
-const NavigationBar = observer(({ setShape, onUpload }) => {
+const NavigationBar = observer(({ onUpload }) => {
   const fileInputRef = useRef(null);
 
   const handleFileChange = (event) => {
@@ -23,10 +23,12 @@ const NavigationBar = observer(({ setShape, onUpload }) => {
     } else {
       console.error("No file selected or invalid file.");
     }
+    event.target.value = null;
   };
 
-  const handleUploadClick = () => {
+  const handleUploadClick = (event) => {
     fileInputRef.current.click();
+    event.target.value = null;
   };
 
   // };
@@ -34,40 +36,40 @@ const NavigationBar = observer(({ setShape, onUpload }) => {
     <>
       <div className="container absolute left-[26%] w-[50%] top-0 m-5 z-10 flex h-[85px] text-2xl ">
         <div className=" flex bg-gray-100 rounded-2xl py-3 px-3 ms-10 bg-gray-200">
-          <div>
+          <div className="hover:bg-white rounded-xl">
             <Geometry
               onClick={() => {
-                setShape("Line");
+                shapeStore.setSelectedShape("Line");
               }}
               name="Line"
             />
           </div>
-          <div>
+          <div className="hover:bg-white rounded-xl">
             <Geometry
               name="Circle"
               onClick={() => {
-                setShape("Circle");
+                shapeStore.setSelectedShape("Circle");
               }}
             />
           </div>
-          <div>
+          <div className="hover:bg-white rounded-xl">
             <Geometry
               name="Ellipse"
               onClick={() => {
-                setShape("Ellipse");
+                shapeStore.setSelectedShape("Ellipse");
               }}
             />
           </div>
-          <div>
+          <div className="hover:bg-white rounded-xl">
             <Geometry
               name="Polyline"
               onClick={() => {
-                setShape("Polyline");
+                shapeStore.setSelectedShape("Polyline");
               }}
             />
           </div>
         </div>
-        <div className="bg-gray-100 rounded-2xl py-3 ms-8 bg-gray-200">
+        <div className="bg-gray-100 rounded-2xl py-3 ms-8 bg-gray-200 hover:bg-white">
           <Geometry
             name="Save"
             onClick={() => {
@@ -75,7 +77,7 @@ const NavigationBar = observer(({ setShape, onUpload }) => {
             }}
           />
         </div>
-        <div className="bg-gray-100 rounded-2xl py-3 ms-3 bg-gray-200">
+        <div className="bg-gray-100 rounded-2xl py-3 ms-3 bg-gray-200 hover:bg-white">
           <input
             type="file"
             ref={fileInputRef}

@@ -82,6 +82,7 @@ class Line {
 
         console.log("line ", this.line);
         shapeStore.addShape(this.line);
+        shapeStore.setSelectedShape(null);
         this.line = null; // Optional: clear the line object to prevent future updates
         // this.flag = false;
         this.removeEventListeners();

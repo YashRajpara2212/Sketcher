@@ -6,18 +6,20 @@ import Ellipse from "./utils/Ellipse";
 import Polyline from "./utils/Polyline";
 import * as THREE from "three";
 import { shapeStore } from "../ShapeStore";
+import { observer } from "mobx-react";
+
 // import Point from "./utils/Point";
 
-const Canvas = ({ selectedShape }) => {
-  
-  const shape = selectedShape;
-  console.log(shape, "selected Shape");
+const Canvas = () => {
+  // const shape = selectedShape
+  // const shape = selectedShape;
+  // console.log(shape, "selected Shape");
   const canvasRef = useRef(null);
   const cameraRef = useRef(null);
   const sceneRef = useRef(null);
   const planeRef = useRef(null);
   const rendererRef = useRef(null);
-  //
+
   const [mouse] = useState(new THREE.Vector2());
   const raycaster = new THREE.Raycaster();
 
@@ -58,9 +60,10 @@ const Canvas = ({ selectedShape }) => {
       sceneRef.current.add(plane);
       planeRef.current = plane;
     }
-  
+
     let shapeInstance;
-    if (shape === "Line") {
+    //shape
+    if (shapeStore.selectedShape === "Line") {
       shapeInstance = new Line(
         sceneRef.current,
         cameraRef.current,
@@ -68,7 +71,7 @@ const Canvas = ({ selectedShape }) => {
         planeRef.current
       );
     }
-    if (shape === "Circle") {
+    if (shapeStore.selectedShape === "Circle") {
       shapeInstance = new Circle(
         sceneRef.current,
         cameraRef.current,
@@ -76,7 +79,7 @@ const Canvas = ({ selectedShape }) => {
         planeRef.current
       );
     }
-    if (shape === "Ellipse") {
+    if (shapeStore.selectedShape === "Ellipse") {
       shapeInstance = new Ellipse(
         sceneRef.current,
         cameraRef.current,
@@ -84,7 +87,7 @@ const Canvas = ({ selectedShape }) => {
         planeRef.current
       );
     }
-    if (shape === "Polyline") {
+    if (shapeStore.selectedShape === "Polyline") {
       shapeInstance = new Polyline(
         sceneRef.current,
         cameraRef.current,
@@ -124,11 +127,9 @@ const Canvas = ({ selectedShape }) => {
       }
       canvas.removeEventListener("click", selectShape);
     };
-  }, [shape]);
+  }, [shapeStore.selectedShape]);
 
   return <canvas ref={canvasRef} className="webgl" />;
 };
 
-export default Canvas;
-
-
+export default observer(Canvas);

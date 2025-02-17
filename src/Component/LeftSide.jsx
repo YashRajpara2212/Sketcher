@@ -21,7 +21,7 @@ const LeftSide = observer(() => {
       <hr />
       <div className="ms-15">
         {shapes?.map((e) => (
-          <div key={e.uuid} onClick={() => handleClick(e)}>
+          <div key={e.uuid} onClick={(event) => handleClick(e, event)}>
             <ShapeInfoComponent shapeName={e.name} entityId={e.uuid} />
           </div>
         ))}

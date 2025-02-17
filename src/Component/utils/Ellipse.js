@@ -68,6 +68,7 @@ class Ellipse {
         this.updateEllipse(); // Update the ellipse to finalize it
         this.isDrawing = false; // Reset drawing state
         shapeStore.addShape(this.ellipse);
+        shapeStore.setSelectedShape(null);
         shapeStore.setEllipseRadius(this.uuid, this.radiusX, this.radiusY);
 
         console.log(this.ellipse, "elipse");

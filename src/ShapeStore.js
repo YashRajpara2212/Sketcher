@@ -1,4 +1,4 @@
-import { makeAutoObservable } from "mobx";
+import { makeAutoObservable, runInAction } from "mobx";
 import * as THREE from "three";
 
 class ShapeStore {
@@ -6,7 +6,7 @@ class ShapeStore {
   currentEntity = null;
   entityId = null;
   scene = null;
-
+  selectedShape = null;
   ellipsesRadiusXY = [];
 
   constructor() {
@@ -31,7 +31,9 @@ class ShapeStore {
   setEntity(inEntity) {
     this.currentEntity = inEntity;
   }
-
+  setSelectedShape(shape) {
+    this.selectedShape = shape;
+  }
   setEllipseRadius(uuid, radiusX, radiusY) {
     // Check if the ellipse already exists in the array by uuid
     const existingEllipse = this.ellipsesRadiusXY.find(
@@ -79,7 +81,6 @@ class ShapeStore {
   // Remove a shape from the scene and dispose of its geometry/material
   removeEntity(entityId) {
     const removeShape = this.shapes.find((e) => e.uuid == entityId);
-    this.removeEllipseData(entityId);
     if (removeShape) {
       if (this.scene) {
         this.scene.remove(removeShape); // Remove shape from the scene
@@ -93,6 +94,7 @@ class ShapeStore {
         this.currentEntity = null; // Clear selection if the selected shape is removed
       }
     }
+    this.removeEllipseData(entityId);
   }
 
   updateEntity(entityId, updatedProperties) {
@@ -303,40 +305,40 @@ class ShapeStore {
     }
 
     // First, remove all shapes from the scene except for camera, renderer, and plane
-    if (this.scene) {
-      this.scene.traverse((object) => {
-        // Check if the object or any of its children is named "Plane"
-        let isPlanePresent = false;
+    // if (this.scene) {
+    //   this.scene.traverse((object) => {
+    //     // Check if the object or any of its children is named "Plane"
+    //     let isPlanePresent = false;
 
-        // Check the current object
-        if (object.name === "Plane") {
-          isPlanePresent = true;
-        }
+    //     // Check the current object
+    //     if (object.name === "Plane") {
+    //       isPlanePresent = true;
+    //     }
 
-        // Check all children of the object
-        if (object.children && object.children.length > 0) {
-          object.children.forEach((child) => {
-            if (child.name === "Plane") {
-              isPlanePresent = true;
-            }
-          });
-        }
+    //     // Check all children of the object
+    //     if (object.children && object.children.length > 0) {
+    //       object.children.forEach((child) => {
+    //         if (child.name === "Plane") {
+    //           isPlanePresent = true;
+    //         }
+    //       });
+    //     }
 
-        // Only remove objects that are not "Camera", "Renderer", or "Plane" (or their children)
-        if (
-          object.name !== "Camera" &&
-          object.name !== "Renderer" &&
-          !isPlanePresent
-        ) {
-          this.scene.remove(object);
-          this.disposeShape(object); // Dispose of the shape resources
-        }
-      });
-    }
+    //     // Only remove objects that are not "Camera", "Renderer", or "Plane" (or their children)
+    //     if (
+    //       object.name !== "Camera" &&
+    //       object.name !== "Renderer" &&
+    //       !isPlanePresent
+    //     ) {
+    //       this.scene.remove(object);
+    //       this.disposeShape(object); // Dispose of the shape resources
+    //     }
+    //   });
+    // }
 
     // Clear out the shapes array
-    this.shapes = [];
-    this.ellipsesRadiusXY = [];
+    // this.shapes = [];
+    // this.ellipsesRadiusXY = [];
 
     // Now, add the shapes back to the scene from the JSON data
     shapesData.forEach((shapeData) => {

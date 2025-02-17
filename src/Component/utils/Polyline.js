@@ -101,6 +101,7 @@ class Polyline {
   handleDoubleClick() {
     this.isDrawing = false; // Stop drawing new line segments
     shapeStore.addShape(this.polyline); // Add the final polyline to the scene
+    shapeStore.setSelectedShape(null);
     this.removeEventListeners(); // Remove event listeners
   }
 
@@ -141,11 +142,11 @@ class Polyline {
     }
   }
 
-
   getIntersection() {
     this.raycaster.setFromCamera(this.mouse, this.camera);
-    return this.raycaster.intersectObject(this.plane); 
+    return this.raycaster.intersectObject(this.plane);
   }
 }
 
 export default Polyline;
+
