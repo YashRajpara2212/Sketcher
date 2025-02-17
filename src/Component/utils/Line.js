@@ -70,17 +70,17 @@ class Line {
       if (!this.isDrawing) {
         this.startPoint = intersects[0].point; // Save the start point
 
-        this.startSphere = this.createSphere(this.startPoint);
+        // this.startSphere = this.createSphere(this.startPoint);
         // console.log(this.startSphere, "sphere");
-        this.scene.add(this.startSphere);
+        // this.scene.add(this.startSphere);
 
-        this.endSphere = this.createSphere(this.startPoint);
-        this.scene.add(this.endSphere);
+        // this.endSphere = this.createSphere(this.startPoint);
+        // this.scene.add(this.endSphere);
         this.isDrawing = true; // Set drawing state to true
       } else {
         // On second click, finalize the line (finish drawing)
         this.endPoint = intersects[0].point;
-        this.endSphere.position.copy(this.endPoint);
+        // this.endSphere.position.copy(this.endPoint);
 
         this.updateLine(); // Update the line to finalize it
         this.isDrawing = false; // Reset drawing state
@@ -105,7 +105,7 @@ class Line {
     if (intersects.length > 0) {
       this.endPoint = intersects[0].point; // Update the end point
 
-      this.endSphere.position.copy(this.endPoint);
+      // this.endSphere.position.copy(this.endPoint);
 
       // Update or create the line in the scene
       this.updateLine();
@@ -118,13 +118,7 @@ class Line {
     return this.raycaster.intersectObject(this.plane);
   }
 
-  createSphere(position) {
-    const geometry = new THREE.SphereGeometry(0.1, 32, 32);
-    const material = new THREE.MeshBasicMaterial({ color: 0xff0000 });
-    const sphere = new THREE.Mesh(geometry, material);
-    sphere.position.set(position.x, position.y, position.z);
-    return sphere;
-  }
+  
   // Update the line geometry
   updateLine() {
     if (this.line) {

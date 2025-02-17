@@ -7,7 +7,7 @@ import { shapeStore } from "../ShapeStore";
 // import * as THREE from "three";
 
 const RightSide = observer(() => {
-  // const [entity, setEntity] = useState(shapeStore.Entity());
+  // const [entity, setEntity] = useState(null);
   const entity = shapeStore.Entity();
   // console.log(
   //   entity?.material.color.r,
@@ -34,6 +34,7 @@ const RightSide = observer(() => {
 
   // setColor([entity.material.color.r,entity.material.color.g,entity.material.color.b])
   useEffect(() => {
+    
     if (entity?.name === "Circle") {
       setCircleCenter(entity.center);
       setCircleRadius(entity.geometry.parameters.radius);

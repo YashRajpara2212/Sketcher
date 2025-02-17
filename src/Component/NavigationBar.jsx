@@ -9,6 +9,24 @@ const NavigationBar = observer(({ setShape, onUpload }) => {
   const fileInputRef = useRef(null);
 
   // Function to handle file selection
+  // const handleFileChange = (event) => {
+  //   const file = event.target.files[0];
+  //   if (file && file instanceof Blob) {
+  //     const reader = new FileReader();
+  //     reader.onload = (e) => {
+  //       try {
+  //         const shapesData = JSON.parse(e.target.result); // Parse the content as JSON
+  //         onUpload(shapesData); // Pass parsed data to uploadAllEntity
+  //       } catch (error) {
+  //         console.error("Error parsing file:", error);
+  //       }
+  //     };
+
+  //     reader.readAsText(file); // Read the file content as text
+  //   } else {
+  //     console.error("No file selected or invalid file.");
+  //   }
+  //   }
   const handleFileChange = (event) => {
     const file = event.target.files[0];
     if (file && file instanceof Blob) {
@@ -21,11 +39,11 @@ const NavigationBar = observer(({ setShape, onUpload }) => {
           console.error("Error parsing file:", error);
         }
       };
-
       reader.readAsText(file); // Read the file content as text
     } else {
       console.error("No file selected or invalid file.");
     }
+  };
 
     //   reader.onload = (event) => {
     //     const shapesData = JSON.parse(event.target.result);
@@ -33,7 +51,7 @@ const NavigationBar = observer(({ setShape, onUpload }) => {
     //   };
     //   reader.readAsText(file);
     // }
-  };
+  
   // Function to trigger the file input dialog when "Upload" is clicked
   const handleUploadClick = () => {
     fileInputRef.current.click();

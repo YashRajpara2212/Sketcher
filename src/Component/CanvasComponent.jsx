@@ -3,9 +3,9 @@ import * as THREE from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 // import Point from "./utils/Point";
 
-const CanvasComponent = () => {
+const CanvasComponent = observer(() => {
   const canvasRef = useRef(null);
-  
+
   useEffect(() => {
     //scene
     const scene = new THREE.Scene();
@@ -45,6 +45,6 @@ const CanvasComponent = () => {
     animate();
   }, []);
   return <canvas ref={canvasRef} className="webgl" />;
-};
+});
 
 export default CanvasComponent;
