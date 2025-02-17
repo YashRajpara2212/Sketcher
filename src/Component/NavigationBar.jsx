@@ -5,10 +5,8 @@ import { shapeStore } from "../ShapeStore";
 import { observer } from "mobx-react";
 
 const NavigationBar = observer(({ setShape, onUpload }) => {
-  
   const fileInputRef = useRef(null);
 
- 
   const handleFileChange = (event) => {
     const file = event.target.files[0];
     if (file && file instanceof Blob) {
@@ -27,7 +25,6 @@ const NavigationBar = observer(({ setShape, onUpload }) => {
     }
   };
 
-   
   const handleUploadClick = () => {
     fileInputRef.current.click();
   };
@@ -35,7 +32,7 @@ const NavigationBar = observer(({ setShape, onUpload }) => {
   // };
   return (
     <>
-      <div className="container absolute left-145 top-0 m-5 z-10 flex h-[85px] text-2xl ">
+      <div className="container absolute left-[26%] w-[50%] top-0 m-5 z-10 flex h-[85px] text-2xl ">
         <div className=" flex bg-gray-100 rounded-2xl py-3 px-3 ms-10 bg-gray-200">
           <div>
             <Geometry

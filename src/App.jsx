@@ -23,7 +23,7 @@ function App() {
         <Canvas className="absolute" selectedShape={selectedShape} />
         {/* <div className="main-container container-fluid  w-full  m-5  py-8 px-3 flex gap-4 absolute"> */}
         <LeftSide />
-        <NavigationBar setShape={setSelectedShape} onUpload={handleUpload}/>
+        <NavigationBar setShape={setSelectedShape} onUpload={handleUpload} />
         <RightSide />
         {/* </div> */}
       </div>
