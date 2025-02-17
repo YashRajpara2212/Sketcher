@@ -28,29 +28,11 @@ const ColorComponent = observer(
       }
       return { r, g, b };
     };
-    // Function to convert hex to RGB
-    // const hexToRgb = (hex) => {
-    //   hex = hex.replace("#", "");
-    //   let r = parseInt(hex.substring(0, 2), 16);
-    //   let g = parseInt(hex.substring(2, 4), 16);
-    //   let b = parseInt(hex.substring(4, 6), 16);
-    //   return { r, g, b };
-    // };
-
-    // function rgbToHex(value) {
-    //   const { r, g, b } = rgbObject;
-    //   const toHex = (val) => {
-    //     const hex = val.toString(16);
-    //     return hex.length === 1 ? "0" + hex : hex;
-    //   };
-
-    //   return `#${toHex(r)}${toHex(g)}${toHex(b)}`;
-    // }
+  
 
     const handleColorChange = (event) => {
       const newHexColor = event.target.value;
-      // const rgb = hexToRgb(hexColor);
-      // setRgbColor(rgb);
+     
 
       setHexColor(newHexColor);
       const { r, g, b } = hexToRgb(newHexColor);

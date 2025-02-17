@@ -1,7 +1,6 @@
-// import React from 'react'
+
 import { TbLine } from "react-icons/tb";
-// import { IoEyeOutline } from "react-icons/io5";
-// import { RiDeleteBinLine } from "react-icons/ri";
+
 import { GoCircle } from "react-icons/go";
 import { TbOvalVertical } from "react-icons/tb";
 import { PiPolygonLight } from "react-icons/pi";

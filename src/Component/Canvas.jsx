@@ -9,8 +9,7 @@ import { shapeStore } from "../ShapeStore";
 // import Point from "./utils/Point";
 
 const Canvas = ({ selectedShape }) => {
-  // const [shape, setShape] = useState(null);
-  // setShape(selectedShape);
+  
   const shape = selectedShape;
   console.log(shape, "selected Shape");
   const canvasRef = useRef(null);
@@ -59,12 +58,7 @@ const Canvas = ({ selectedShape }) => {
       sceneRef.current.add(plane);
       planeRef.current = plane;
     }
-    //event listener
-
-    // window.addEventListener("mousemove", onMouseMove);
-
-    // const point = new Point(-1, 0, 1);
-    // point.generateSphere(scene);
+  
     let shapeInstance;
     if (shape === "Line") {
       shapeInstance = new Line(
@@ -137,4 +131,4 @@ const Canvas = ({ selectedShape }) => {
 
 export default Canvas;
 
-// {`${className}`}
+

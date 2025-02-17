@@ -9,18 +9,7 @@ import { shapeStore } from "../ShapeStore";
 const RightSide = observer(() => {
   // const [entity, setEntity] = useState(null);
   const entity = shapeStore.Entity();
-  // console.log(
-  //   entity?.material.color.r,
-  //   entity?.material.color.g,
-  //   entity?.material.color.b,
-  //   "color"
-  // );
-  // let circleCenter = null;
-  // let circleRadius = null;
-  // let Rx = null;
-  // let Ry = null;
-  // let ellipseCenter = null;
-  // let ellipseRadius = null;
+ 
   const [circleCenter, setCircleCenter] = useState({ x: 0, y: 0, z: 0 });
   const [circleRadius, setCircleRadius] = useState(null);
   const [ellipseCenter, setEllipseCenter] = useState({ x: 0, y: 0, z: 0 });
@@ -34,12 +23,10 @@ const RightSide = observer(() => {
 
   // setColor([entity.material.color.r,entity.material.color.g,entity.material.color.b])
   useEffect(() => {
-    
     if (entity?.name === "Circle") {
       setCircleCenter(entity.center);
       setCircleRadius(entity.geometry.parameters.radius);
-      // circleRadius = entity.geometry.parameters.radius;
-      // circleCenter = entity.center;
+      
     }
     if (entity?.name === "Ellipse") {
       const ellipseRadius = shapeStore.getEllipseRadius(entity?.uuid);
@@ -85,8 +72,7 @@ const RightSide = observer(() => {
       setOpacity(opacity);
     }
   }, [entity]);
-  // console.log(color, "color");
-  // console.log(entity, "entity in right side");
+ 
   console.log(shapeStore.scene, "last scene");
   //handler
   const handleLineStartChange = (axis, value) => {
@@ -97,7 +83,7 @@ const RightSide = observer(() => {
       return newStart;
     });
 
-    // setLineStart((prevState) => ({ ...prevState, [axis]: value }));
+    
   };
 
   const handleLineEndChange = (axis, value) => {
@@ -146,9 +132,7 @@ const RightSide = observer(() => {
 
   const handleColor = (value) => {
     setColor(value);
-    // if (entity?.material) {
-    //   entity.material.color.setRGB(value.r / 255, value.g / 255, value.b / 255);
-    // }
+   
   };
 
   const handleOpacity = (value) => {
@@ -184,23 +168,7 @@ const RightSide = observer(() => {
     shapeStore.updateEntity(entityId, updatedProperties); // Pass the updated properties to the store
   };
 
-  // const handleUpdate = (id) => {
-  //   shapeStore.updateEntity(id); // Pass the ID of the selected entity to update its properties
-  // };
-
-  // const points = entity?.geometry.attributes.position.array;
-
-  // const getCoordinates = (index) => {
-  //   if (points && points.length >= index * 3 + 3) {
-  //     return {
-  //       x: points[index * 3],
-  //       y: points[index * 3 + 1],
-
-  //       z: points[index * 3 + 2],
-  //     };
-  //   }
-  //   return { x: 0, y: 0, z: 0 };
-  // };
+ 
 
   return (
     //container flex-col absolute right-0 top-0 z-10 m-5 p-5 bg-gray-200 mx-3   min-h-screen rounded-xl w-[25%]
@@ -231,9 +199,7 @@ const RightSide = observer(() => {
                   value={lineStart[2]} //{lineStart.z}
                   onChange={(value) => handleLineStartChange("z", value)}
                 />
-                {/* <InputNumber label="x" value={getCoordinates(0).x} />
-                <InputNumber label="y" value={getCoordinates(0).y} />
-                <InputNumber label="z" value={getCoordinates(0).z} /> */}
+               
               </div>
               <div className="flex flex-col gap-4">
                 <div className="text-xl">Ending Point</div>
@@ -252,9 +218,7 @@ const RightSide = observer(() => {
                   value={lineEnd[2]} //{lineEnd.z}
                   onChange={(value) => handleLineEndChange("z", value)}
                 />
-                {/* <InputNumber label="x" value={getCoordinates(1).x} />
-                <InputNumber label="y" value={getCoordinates(1).y} />
-                <InputNumber label="z" value={getCoordinates(1).z} /> */}
+               
               </div>
             </div>
           )}
@@ -277,9 +241,7 @@ const RightSide = observer(() => {
                   value={circleCenter.z}
                   onChange={(value) => handleCircleCenterChange("z", value)}
                 />
-                {/* <InputNumber label="x" value={circleCenter.x} />
-                <InputNumber label="y" value={circleCenter.y} />
-                <InputNumber label="z" value={circleCenter.z} /> */}
+             
               </div>
 
               <div>
@@ -312,9 +274,7 @@ const RightSide = observer(() => {
                   value={ellipseCenter.z}
                   onChange={(value) => handleEllipseCenterChange("z", value)}
                 />
-                {/* <InputNumber label="x" value={ellipseCenter.x} />
-                <InputNumber label="y" value={ellipseCenter.y} />
-                <InputNumber label="z" value={ellipseCenter.z} /> */}
+             
               </div>
               <div className="flex flex-col gap-4 mb-3 w-full">
                 <div className="text-xl">Radius</div>
@@ -328,8 +288,7 @@ const RightSide = observer(() => {
                   value={Ry}
                   onChange={handleEllipseRadiusYChange}
                 />
-                {/* <InputNumber label="Rx" value={Rx} />
-                <InputNumber label="Ry" value={Ry} /> */}
+            
               </div>
             </div>
           )}
@@ -361,16 +320,7 @@ const RightSide = observer(() => {
                   />
                 </div>
               ))}
-              {/* {Array.from({ length: (points.length - 6) / 3 }).map(
-                (_, index) => (
-                  <div key={index} className="flex flex-col gap-4 mb-3">
-                    <div className="text-xl">Point {index + 1}</div>
-                    <InputNumber label="x" value={getCoordinates(index).x} />
-                    <InputNumber label="y" value={getCoordinates(index).y} />
-                    <InputNumber label="z" value={getCoordinates(index).z} />
-                  </div>
-                )
-              )} */}
+             
             </div>
           )}
           <ButtonComponent
@@ -387,9 +337,7 @@ const RightSide = observer(() => {
             opacity={opacity}
             handleOpacity={handleOpacity}
           />
-          {/* <div>
-            <input type="color" />
-          </div> */}
+        
           <ButtonComponent
             name="Hide"
             entityID={entity.uuid}

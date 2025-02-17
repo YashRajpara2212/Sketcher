@@ -8,8 +8,8 @@ class Line {
     this.renderer = renderer;
     this.plane = plane;
 
-    this.mouse = new THREE.Vector2(); // Mouse position in normalized device coordinates
-    this.raycaster = new THREE.Raycaster(); // Raycaster for mouse picking
+    this.mouse = new THREE.Vector2(); 
+    this.raycaster = new THREE.Raycaster();
     this.startPoint = null;
     this.endPoint = null;
     this.startSphere = null;
@@ -70,12 +70,7 @@ class Line {
       if (!this.isDrawing) {
         this.startPoint = intersects[0].point; // Save the start point
 
-        // this.startSphere = this.createSphere(this.startPoint);
-        // console.log(this.startSphere, "sphere");
-        // this.scene.add(this.startSphere);
-
-        // this.endSphere = this.createSphere(this.startPoint);
-        // this.scene.add(this.endSphere);
+    
         this.isDrawing = true; // Set drawing state to true
       } else {
         // On second click, finalize the line (finish drawing)
@@ -105,9 +100,7 @@ class Line {
     if (intersects.length > 0) {
       this.endPoint = intersects[0].point; // Update the end point
 
-      // this.endSphere.position.copy(this.endPoint);
-
-      // Update or create the line in the scene
+     
       this.updateLine();
     }
   }

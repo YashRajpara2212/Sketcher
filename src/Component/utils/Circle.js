@@ -8,17 +8,16 @@ class Circle {
     this.renderer = renderer;
     this.plane = plane;
 
-    this.mouse = new THREE.Vector2(); // Mouse position in normalized device coordinates
-    this.raycaster = new THREE.Raycaster(); // Raycaster for mouse picking
-    this.center = null; // Center of the circle
-    this.radius = 0; // Radius of the circle
-    this.circle = null; // The circle object
-    this.isDrawing = false; // Track if the circle is being drawn
+    this.mouse = new THREE.Vector2();
+    this.raycaster = new THREE.Raycaster();
+    this.center = null;
+    this.radius = 0;
+    this.circle = null;
+    this.isDrawing = false;
 
     // Bind event listeners
     this.handleMouseDown = this.handleMouseDown.bind(this);
     this.handleMouseMove = this.handleMouseMove.bind(this);
-    // this.handleMouseUp = this.handleMouseUp.bind(this);
 
     this.addEventListeners();
   }
@@ -33,7 +32,6 @@ class Circle {
       "mousemove",
       this.handleMouseMove
     );
-    // this.renderer.domElement.addEventListener("mouseup", this.handleMouseUp);
   }
 
   // Remove event listeners (cleanup)
@@ -46,61 +44,47 @@ class Circle {
       "mousemove",
       this.handleMouseMove
     );
-    // this.renderer.domElement.removeEventListener("mouseup", this.handleMouseUp);
   }
 
-  // Update mouse position (from normalized device coordinates to world space)
   updateMousePosition(event) {
     this.mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
     this.mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
   }
 
-  // Handle mouse down event (start drawing circle)
   handleMouseDown(event) {
     this.updateMousePosition(event);
 
-    // Get the intersection of the mouse with the plane (center point of the circle)
     const intersects = this.getIntersection();
     if (intersects.length > 0) {
       if (!this.isDrawing) {
         this.center = intersects[0].point; // Save the center point
         console.log(this.center, "center");
-        this.isDrawing = true; // Set drawing state to true
+        this.isDrawing = true;
       } else {
         // On second click, finalize the circle (finish drawing)
         this.radius = this.center.distanceTo(intersects[0].point);
-        this.updateCircle(); // Update the circle to finalize it
-        this.isDrawing = false; // Reset drawing state
+        this.updateCircle();
+        this.isDrawing = false;
         shapeStore.addShape(this.circle);
         console.log(this.radius, "circle radius");
-        this.circle = null; // Optional: clear the circle object to prevent future updates
+        this.circle = null;
         this.removeEventListeners();
       }
     }
   }
 
-  // Handle mouse move event (draw the circle dynamically)
   handleMouseMove(event) {
-    if (!this.isDrawing || !this.center) return; // Only start drawing if we have a center
-
+    if (!this.isDrawing || !this.center) return;
     this.updateMousePosition(event);
 
-    // Get the intersection of the mouse with the plane (update circle radius)
     const intersects = this.getIntersection();
     if (intersects.length > 0) {
       this.radius = this.center.distanceTo(intersects[0].point); // Update the radius
 
-      // Update or create the circle in the scene
       this.updateCircle();
     }
   }
 
-  // Handle mouse up event (finalize circle)
-  //   handleMouseUp(event) {
-  //     // Circle is finalized on mouse down, no need for specific logic here
-  //   }
-
-  // Get the intersection between the mouse and the plane
   getIntersection() {
     this.raycaster.setFromCamera(this.mouse, this.camera); // Set ray origin from camera
     return this.raycaster.intersectObject(this.plane);
@@ -109,12 +93,8 @@ class Circle {
   // Update the circle geometry
   updateCircle() {
     if (this.circle) {
-      // If the circle exists, just update the radius
-      // this.circle.geometry.dispose();
       this.circle.geometry = new THREE.CircleGeometry(this.radius, 64);
     } else {
-      // If the circle does not exist, create a new one
-
       const geometry = new THREE.CircleGeometry(this.radius, 64);
       const material = new THREE.MeshBasicMaterial({
         color: 0x0000ff,

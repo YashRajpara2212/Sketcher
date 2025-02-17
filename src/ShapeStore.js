@@ -6,8 +6,7 @@ class ShapeStore {
   currentEntity = null;
   entityId = null;
   scene = null;
-  // ellipseRadiusY = [];
-  // ellipseRadiusX = [];
+
   ellipsesRadiusXY = [];
 
   constructor() {
@@ -63,29 +62,6 @@ class ShapeStore {
       (ellipse) => ellipse.uuid !== uuid
     );
   }
-
-  // setEllipseRadiusX(uuid, radiusX) {
-  //   this.ellipseRadiusX.push({ uuid: radiusX });
-  // }
-
-  // getEllipseRadiusX(uuid) {
-  //   // Find the object with the matching uuid
-  //   const entry = this.ellipseRadiusX.find((entry) => entry.uuid === uuid);
-
-  //   // Return the radiusX value or null if not found
-  //   return entry ? entry.uuid : null;
-  // }
-
-  // getEllipseRadiusY(uuid) {
-  //   // Find the object with the matching uuid
-  //   const entry = this.ellipseRadiusY.find((entry) => entry.uuid === uuid);
-
-  //   // Return the radiusX value or null if not found
-  //   return entry ? entry.uuid : null;
-  // }
-  // setEllipseRadiusY(uuid, radiusY) {
-  //   this.ellipseRadiusY.push({ uuid: radiusY });
-  // }
 
   hideEntity(entityId) {
     const hideShape = this.shapes.find((e) => e.uuid == entityId);
@@ -392,13 +368,6 @@ class ShapeStore {
         newShape = new THREE.Line(lineGeometry, lineMaterial);
         newShape.name = "Line";
       } else if (name === "Circle") {
-        // if (!Array.isArray(specificProperties.circleCenter)) {
-        //   console.error(
-        //     "Invalid circleCenter:",
-        //     specificProperties.circleCenter
-        //   );
-        //   return; // Exit early if it's not an array
-        // }
         const circleGeometry = new THREE.CircleGeometry(
           specificProperties.circleRadius
         );
@@ -409,7 +378,7 @@ class ShapeStore {
         newShape = new THREE.Mesh(circleGeometry, circleMaterial);
 
         newShape.center = { ...specificProperties.circleCenter };
-        newShape.position.set(newShape.center.x, 0, newShape.center.z);
+        newShape.position.set(newShape.center.x, 0.5, newShape.center.z);
         // newShape.position.set(...specificProperties.circleCenter);
         newShape.rotation.x = -Math.PI * 0.5;
         newShape.name = "Circle";
@@ -434,9 +403,7 @@ class ShapeStore {
         console.log(...specificProperties.ellipseCenter, "ellipse-center");
         newShape.position.set(...specificProperties.ellipseCenter);
         newShape.rotation.x = Math.PI * 0.5;
-        // newShape.position.x(...specificProperties.ellipseCenter[0]);
-        // newShape.position.y(0.5);
-        // newShape.position.z(...specificProperties.ellipseCenter[2]);
+
         newShape.name = "Ellipse";
         this.setEllipseRadius(
           newShape.uuid,
@@ -465,240 +432,6 @@ class ShapeStore {
       }
     });
   }
-  // uploadAllEntity(shapesData) {
-  //   // First, remove all shapes from the scene except for camera, renderer, and plane
-  //   if (this.scene) {
-  //     this.scene.traverse((object) => {
-  //       // Check if the object or any of its children is named "Plane"
-  //       let isPlanePresent = false;
-
-  //       // Check the current object
-  //       if (object.name === "Plane") {
-  //         isPlanePresent = true;
-  //       }
-
-  //       // Check all children of the object
-  //       if (object.children && object.children.length > 0) {
-  //         object.children.forEach((child) => {
-  //           if (child.name === "Plane") {
-  //             isPlanePresent = true;
-  //           }
-  //         });
-  //       }
-
-  //       // Only remove objects that are not "Camera", "Renderer", or "Plane" (or their children)
-  //       if (
-  //         object.name !== "Camera" &&
-  //         object.name !== "Renderer" &&
-  //         !isPlanePresent
-  //       ) {
-  //         this.scene.remove(object);
-  //         this.disposeShape(object); // Dispose of the shape resources
-  //       }
-  //     });
-  //   }
-
-  //   // Clear out the shapes array
-  //   this.shapes = [];
-
-  //   // Now, add the shapes back to the scene from the JSON data
-  //   shapesData.forEach((shapeData) => {
-  //     const { name, color, opacity, ...specificProperties } = shapeData;
-  //     let newShape;
-
-  //     // Create the shape based on the name
-  //     if (name === "Line") {
-  //       const lineGeometry = new THREE.BufferGeometry();
-  //       const positions = new Float32Array([
-  //         ...specificProperties.lineStart,
-  //         ...specificProperties.lineEnd,
-  //       ]);
-  //       lineGeometry.setAttribute(
-  //         "position",
-  //         new THREE.BufferAttribute(positions, 3)
-  //       );
-  //       const lineMaterial = new THREE.LineBasicMaterial({
-  //         color: new THREE.Color(color),
-  //         opacity,
-  //       });
-  //       newShape = new THREE.Line(lineGeometry, lineMaterial);
-  //     } else if (name === "Circle") {
-  //       const circleGeometry = new THREE.CircleGeometry(
-  //         specificProperties.circleRadius
-  //       );
-  //       const circleMaterial = new THREE.MeshBasicMaterial({
-  //         color: new THREE.Color(color),
-  //         opacity,
-  //       });
-  //       newShape = new THREE.Mesh(circleGeometry, circleMaterial);
-  //       newShape.position.set(...specificProperties.circleCenter);
-  //     } else if (name === "Ellipse") {
-  //       const ellipseGeometry = new THREE.EllipseCurve(
-  //         0,
-  //         0, // center
-  //         specificProperties.Rx,
-  //         specificProperties.Ry, // radii
-  //         0,
-  //         Math.PI * 2 // full circle
-  //       ).getPoints(64);
-
-  //       const ellipseBufferGeometry = new THREE.BufferGeometry().setFromPoints(
-  //         ellipseGeometry
-  //       );
-  //       const ellipseMaterial = new THREE.LineBasicMaterial({
-  //         color: new THREE.Color(color),
-  //         opacity,
-  //       });
-  //       newShape = new THREE.Line(ellipseBufferGeometry, ellipseMaterial);
-  //       newShape.position.set(...specificProperties.ellipseCenter);
-  //     } else if (name === "Polyline") {
-  //       const polylineGeometry = new THREE.BufferGeometry();
-  //       const points = new Float32Array(specificProperties.polylinePoints);
-  //       polylineGeometry.setAttribute(
-  //         "position",
-  //         new THREE.BufferAttribute(points, 3)
-  //       );
-  //       const polylineMaterial = new THREE.LineBasicMaterial({
-  //         color: new THREE.Color(color),
-  //         opacity,
-  //       });
-  //       newShape = new THREE.Line(polylineGeometry, polylineMaterial);
-  //     }
-
-  //     // Add the new shape to the scene and the shapes array
-  //     if (newShape) {
-  //       this.scene.add(newShape);
-  //       this.shapes.push(newShape);
-  //     }
-  //   });
-  // }
-  // uploadAllEntity(file) {
-  //   const reader = new FileReader();
-
-  //   reader.onload = (event) => {
-  //     const data = JSON.parse(event.target.result);
-  //     console.log(data, "data");
-
-  //     // First, remove all shapes from the scene except for camera, renderer, and plane
-  //     // if (this.scene) {
-  //     //   // Loop through all objects in the scene and remove shapes, but keep camera, renderer, and plane (even in children)
-  //     //   this.scene.traverse((object) => {
-  //     //     // Check if the object or any of its children is a plane, if so, skip removal
-  //     //     if (object.name !== "Camera" && object.name !== "Renderer") {
-  //     //       // If the object is a group, check its children for Plane
-  //     //       if (object.children && object.children.length > 0) {
-  //     //         const isPlanePresent = object.children.some(child => child.name === "Plane");
-  //     //         if (isPlanePresent) {
-  //     //           return; // Skip removal if 'Plane' is found in the children
-  //     //         }
-  //     //       }
-  //     if (this.scene) {
-  //       // Loop through all objects in the scene and remove shapes, but keep camera, renderer, and plane
-  //       this.scene.traverse((object) => {
-  //         // Only remove objects that are shapes and not camera, renderer, or plane
-  //         if (
-  //           object.name !== "Camera" &&
-  //           object.name !== "Renderer" &&
-  //           object.name !== "Plane"
-  //         ) {
-  //           this.scene.remove(object);
-  //           this.disposeShape(object); // Dispose of the shape resources (geometry and material)
-  //         }
-  //       });
-  //     }
-
-  //     // Clear out the shapes array
-  //     this.shapes = [];
-
-  //     // Now, add the shapes back to the scene from the JSON data
-  //     data.forEach((shapeData) => {
-  //       const { name, color, opacity, specificProperties } = shapeData; //uuid
-  //       let newShape;
-
-  //       // Create the shape based on the name
-  //       if (name === "Line") {
-  //         const lineGeometry = new THREE.BufferGeometry();
-  //         const positions = new Float32Array([
-  //           ...specificProperties.lineStart,
-  //           ...specificProperties.lineEnd,
-  //         ]);
-  //         lineGeometry.setAttribute(
-  //           "position",
-  //           new THREE.BufferAttribute(positions, 3)
-  //         );
-  //         const lineMaterial = new THREE.LineBasicMaterial({
-  //           color: new THREE.Color(color),
-  //           opacity,
-  //         });
-  //         newShape = new THREE.Line(lineGeometry, lineMaterial);
-  //       } else if (name === "Circle") {
-  //         const circleGeometry = new THREE.CircleGeometry(
-  //           specificProperties.circleRadius
-  //         );
-  //         const circleMaterial = new THREE.MeshBasicMaterial({
-  //           color: new THREE.Color(color),
-  //           opacity,
-  //         });
-  //         newShape = new THREE.Mesh(circleGeometry, circleMaterial);
-  //         newShape.position.set(...specificProperties.circleCenter);
-  //       } else if (name === "Ellipse") {
-  //         const ellipseGeometry = new THREE.EllipseCurve(
-  //           0,
-  //           0, // center
-  //           specificProperties.Rx,
-  //           specificProperties.Ry, // radii
-  //           0,
-  //           Math.PI * 2 // full circle
-  //         ).getPoints(64);
-
-  //         const ellipseBufferGeometry =
-  //           new THREE.BufferGeometry().setFromPoints(ellipseGeometry);
-  //         const ellipseMaterial = new THREE.LineBasicMaterial({
-  //           color: new THREE.Color(color),
-  //           opacity,
-  //         });
-  //         newShape = new THREE.Line(ellipseBufferGeometry, ellipseMaterial);
-  //         newShape.position.set(...specificProperties.ellipseCenter);
-  //       } else if (name === "Polyline") {
-  //         const polylineGeometry = new THREE.BufferGeometry();
-  //         const points = new Float32Array(specificProperties.polylinePoints);
-  //         polylineGeometry.setAttribute(
-  //           "position",
-  //           new THREE.BufferAttribute(points, 3)
-  //         );
-  //         const polylineMaterial = new THREE.LineBasicMaterial({
-  //           color: new THREE.Color(color),
-  //           opacity,
-  //         });
-  //         newShape = new THREE.Line(polylineGeometry, polylineMaterial);
-  //       }
-
-  //       // Add the new shape to the scene and the shapes array
-  //       if (newShape) {
-  //         this.scene.add(newShape);
-  //         this.shapes.push(newShape);
-  //       }
-  //     });
-  //   };
-
-  //   reader.readAsText(file); // Read the uploaded file
-  // }
 }
 
 export const shapeStore = new ShapeStore();
-
-// updateEntity(entityId) {
-//   const updateShape = this.shapes.find((e) => e.uuid == entityId);
-//   if (updateShape.name === "Line") {
-//     updateShape.geometry.attributes.position.array = [
-//       ...lineStart,
-//       ...lineEnd,
-//     ];
-//   }
-//   if (updateShape.name === "Circle") {
-//   }
-//   if (updateShape.name === "Polyline") {
-//   }
-//   if (updateShape.name === "Ellipse") {
-//   }
-// }

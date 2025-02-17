@@ -31,8 +31,7 @@ const CanvasComponent = observer(() => {
     plane.rotation.x = -Math.PI * 0.5;
     scene.add(plane);
 
-    // const point = new Point(1, 0, 1);
-    // point.generateSphere(scene, 1);
+ 
 
     controls.update();
 
