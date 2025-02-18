@@ -1,4 +1,4 @@
-import { makeAutoObservable, runInAction } from "mobx";
+import { makeAutoObservable } from "mobx";
 import * as THREE from "three";
 
 class ShapeStore {
@@ -8,65 +8,22 @@ class ShapeStore {
   scene = null;
   selectedShape = null;
   ellipsesRadiusXY = [];
-  // lineNo = 1;
-  // circleNo = 1;
-  // ellipseNo = 1;
-  // polylineNo = 1;
-  // lineNo = 0;
-  // circleNo = 0;
-  // ellipseNo = 0;
-  // polylineNo = 0;
 
-  lines = []; // To store all lines
-  circles = []; // To store all circles
-  ellipses = []; // To store all ellipses
+  lines = [];
+  circles = [];
+  ellipses = [];
   polylines = [];
 
   constructor() {
     makeAutoObservable(this);
   }
-  // setLineNo() {
-  //   this.lineNo++ ;
-  // }
-  // setCircleNo() {
-  //   this.circleNo++
-  // }
-
-  // setEllipseNo() {
-  //   this.ellipseNo++;
-  // }
-
-  // setPolylineNo() {
-  //   this.polylineNo++;
-  // }
 
   setScene(scene) {
     this.scene = scene;
-    console.log(this.scene, "scene1");
+    // console.log(this.scene, "scene1");
   }
 
   addShape(shapeMesh) {
-    // if (shapeMesh.name === 'Line') {
-    //   this.lineNo += 1;
-    // } else if (shapeMesh.name === 'Circle') {
-    //   this.circleNo += 1;
-    // } else if (shapeMesh.name === 'Ellipse') {
-    //   this.ellipseNo += 1;
-    // } else if (shapeMesh.name === 'Polyline') {
-    //   this.polylineNo += 1;
-    // }
-
-    // if (shapeMesh.name === 'Line') {
-    //   this.lines.push(shapeMesh.uuid);
-    // } else if (shapeMesh.name === 'Circle') {
-    //   this.circles.push(shapeMesh.uuid);
-    // } else if (shapeMesh.name === 'Ellipse') {
-    //   this.ellipses.push(shapeMesh.uuid);
-    // } else if (shapeMesh.name === 'Polyline') {
-    //   this.polylines.push(shapeMesh.uuid);
-    // }
-    // this.updateShapeNumbers();
-
     if (shapeMesh.name === "Line") {
       this.lines.push(shapeMesh);
       shapeMesh.number = this.lines.length; // Assign number based on length
@@ -83,14 +40,6 @@ class ShapeStore {
 
     this.shapes.push(shapeMesh);
   }
-
-  // updateShapeNumbers() {
-  //   // Re-index each shape list
-  //   this.lines.forEach((shape, index) => { shape.number = index + 1 });
-  //   this.circles.forEach((shape, index) => { shape.number = index + 1 });
-  //   this.ellipses.forEach((shape, index) => { shape.number = index + 1 });
-  //   this.polylines.forEach((shape, index) => { shape.number = index + 1 });
-  // }
 
   resetShapes() {
     this.shapes = [];
@@ -149,22 +98,6 @@ class ShapeStore {
     }
   }
 
-  //get shape number
-  //   getShapeNumberByName(shapeName) {
-  //     switch (shapeName) {
-  //         case 'Line':
-  //             return this.lines.length;
-  //         case 'Circle':
-  //             return this.circles.length;
-  //         case 'Ellipse':
-  //             return this.ellipses.length;
-  //         case 'Polyline':
-  //             return this.polylines.length;
-  //         default:
-  //             return 0;
-  //     }
-  // }
-
   // Get the number of a specific shape by its name and uuid
   getShapeNumberByNameAndUUID(shapeName, uuid) {
     let shapeArray;
@@ -192,7 +125,8 @@ class ShapeStore {
 
     if (shape) {
       // Return the shape's position (index + 1) as the shape's number
-      return shapeArray.indexOf(shape) + 1;
+      // return shapeArray.indexOf(shape) + 1;
+      return shape.number;
     }
 
     return null; // Return null if no shape found with the given uuid
@@ -200,13 +134,7 @@ class ShapeStore {
 
   // Remove a shape from the scene and dispose of its geometry/material
   removeEntity(entityId) {
-    // this.lines = this.lines.filter(s => s.uuid !== entityId);
-    // this.circles = this.circles.filter(s => s.uuid !== entityId);
-    // this.ellipses = this.ellipses.filter(s => s.uuid !== entityId);
-    // this.polylines = this.polylines.filter(s => s.uuid !== entityId);
-    // this.updateShapeNumbers();
-
-    //before changes
+    //before changes //
     const removeShape = this.shapes.find((e) => e.uuid == entityId);
     if (removeShape) {
       // for number
@@ -238,7 +166,7 @@ class ShapeStore {
         shape.number = index + 1;
       });
 
-      //
+      //            //
       if (this.scene) {
         this.scene.remove(removeShape); // Remove shape from the scene
       }
@@ -374,9 +302,6 @@ class ShapeStore {
       updateShape.material.opacity = opacity / 100;
       updateShape.material.needsUpdate = true;
     }
-
-    // Ensure shape visibility is updated
-    // updateShape.visible = updateShape.visible;
   }
 
   // Helper function to dispose of shape's resources
@@ -462,43 +387,6 @@ class ShapeStore {
       return; // Exit early if the scene is not available
     }
 
-    // First, remove all shapes from the scene except for camera, renderer, and plane
-    // if (this.scene) {
-    //   this.scene.traverse((object) => {
-    //     // Check if the object or any of its children is named "Plane"
-    //     let isPlanePresent = false;
-
-    //     // Check the current object
-    //     if (object.name === "Plane") {
-    //       isPlanePresent = true;
-    //     }
-
-    //     // Check all children of the object
-    //     if (object.children && object.children.length > 0) {
-    //       object.children.forEach((child) => {
-    //         if (child.name === "Plane") {
-    //           isPlanePresent = true;
-    //         }
-    //       });
-    //     }
-
-    //     // Only remove objects that are not "Camera", "Renderer", or "Plane" (or their children)
-    //     if (
-    //       object.name !== "Camera" &&
-    //       object.name !== "Renderer" &&
-    //       !isPlanePresent
-    //     ) {
-    //       this.scene.remove(object);
-    //       this.disposeShape(object); // Dispose of the shape resources
-    //     }
-    //   });
-    // }
-
-    // Clear out the shapes array
-    // this.shapes = [];
-    // this.ellipsesRadiusXY = [];
-
-    // Now, add the shapes back to the scene from the JSON data
     shapesData.forEach((shapeData) => {
       const { name, color, opacity, ...specificProperties } = shapeData;
       let newShape;
