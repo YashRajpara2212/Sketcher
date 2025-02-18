@@ -8,7 +8,7 @@ import { shapeStore } from "../ShapeStore";
 import { observer } from "mobx-react";
 
 // eslint-disable-next-line react/prop-types
-const ShapeInfoComponent = observer(({ shapeName, entityId }) => {
+const ShapeInfoComponent = observer(({ shapeName, entityId, shapeNumber }) => {
   let icon = null;
 
   if (shapeName === "Line") {
@@ -50,7 +50,10 @@ const ShapeInfoComponent = observer(({ shapeName, entityId }) => {
       >
         <div className="flex">
           <div className="px-3 pt-1 ">{icon}</div>
-          <div className="px-3 ">{shapeName}</div>
+
+          <div className="px-3 ">
+            {shapeName} {shapeNumber && `${shapeNumber}`}
+          </div>
         </div>
 
         <div className="flex">

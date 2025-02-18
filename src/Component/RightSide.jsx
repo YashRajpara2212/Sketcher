@@ -10,6 +10,7 @@ const RightSide = observer(() => {
   // const [entity, setEntity] = useState(null);
   const entity = shapeStore.Entity();
 
+  const [entityNo, setEntityNo] = useState(0);
   const [circleCenter, setCircleCenter] = useState({ x: 0, y: 0, z: 0 });
   const [circleRadius, setCircleRadius] = useState(null);
   const [ellipseCenter, setEllipseCenter] = useState({ x: 0, y: 0, z: 0 });
@@ -24,6 +25,7 @@ const RightSide = observer(() => {
   // setColor([entity.material.color.r,entity.material.color.g,entity.material.color.b])
   useEffect(() => {
     if (entity?.name === "Circle") {
+      setEntityNo(entity.number);
       setCircleCenter(entity.center);
       setCircleRadius(entity.geometry.parameters.radius);
     }
@@ -41,6 +43,7 @@ const RightSide = observer(() => {
       //   setRx(null);
       //   setRy(null);
       // }
+      setEntityNo(entity.number);
       setEllipseCenter(entity.position);
       setRx(ellipseRadius[0]);
       setRy(ellipseRadius[1]);
@@ -52,12 +55,14 @@ const RightSide = observer(() => {
       // console.log(shapeStore.getEllipseRadius(entity?.uuid), "radius");
     }
     if (entity?.name === "Line") {
+      setEntityNo(entity.number);
       setLineStart(entity.geometry.attributes.position.array.slice(0, 3));
       setLineEnd(entity.geometry.attributes.position.array.slice(3, 6));
       console.log(lineStart, "start", lineEnd, "end");
     }
 
     if (entity?.name === "Polyline") {
+      setEntityNo(entity.number);
       const points = entity.geometry.attributes.position.array;
       const polylinePoints = Array.from({
         length: (points.length - 3) / 3,
@@ -181,7 +186,9 @@ const RightSide = observer(() => {
       <div className="font-bold text-2xl">Properties</div>
       {entity ? (
         <>
-          <div className="mb-4 text-xl">{entity.name}</div>{" "}
+          <div className="mb-4 text-xl">
+            {entity.name} {entityNo}
+          </div>{" "}
           {/* Show shape's name */}
           <hr className="my-4" />
           {/* Properties based on selected shape */}

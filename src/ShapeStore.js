@@ -8,10 +8,37 @@ class ShapeStore {
   scene = null;
   selectedShape = null;
   ellipsesRadiusXY = [];
+  // lineNo = 1;
+  // circleNo = 1;
+  // ellipseNo = 1;
+  // polylineNo = 1;
+  // lineNo = 0;
+  // circleNo = 0;
+  // ellipseNo = 0;
+  // polylineNo = 0;
+
+  lines = []; // To store all lines
+  circles = []; // To store all circles
+  ellipses = []; // To store all ellipses
+  polylines = [];
 
   constructor() {
     makeAutoObservable(this);
   }
+  // setLineNo() {
+  //   this.lineNo++ ;
+  // }
+  // setCircleNo() {
+  //   this.circleNo++
+  // }
+
+  // setEllipseNo() {
+  //   this.ellipseNo++;
+  // }
+
+  // setPolylineNo() {
+  //   this.polylineNo++;
+  // }
 
   setScene(scene) {
     this.scene = scene;
@@ -19,8 +46,51 @@ class ShapeStore {
   }
 
   addShape(shapeMesh) {
+    // if (shapeMesh.name === 'Line') {
+    //   this.lineNo += 1;
+    // } else if (shapeMesh.name === 'Circle') {
+    //   this.circleNo += 1;
+    // } else if (shapeMesh.name === 'Ellipse') {
+    //   this.ellipseNo += 1;
+    // } else if (shapeMesh.name === 'Polyline') {
+    //   this.polylineNo += 1;
+    // }
+
+    // if (shapeMesh.name === 'Line') {
+    //   this.lines.push(shapeMesh.uuid);
+    // } else if (shapeMesh.name === 'Circle') {
+    //   this.circles.push(shapeMesh.uuid);
+    // } else if (shapeMesh.name === 'Ellipse') {
+    //   this.ellipses.push(shapeMesh.uuid);
+    // } else if (shapeMesh.name === 'Polyline') {
+    //   this.polylines.push(shapeMesh.uuid);
+    // }
+    // this.updateShapeNumbers();
+
+    if (shapeMesh.name === "Line") {
+      this.lines.push(shapeMesh);
+      shapeMesh.number = this.lines.length; // Assign number based on length
+    } else if (shapeMesh.name === "Circle") {
+      this.circles.push(shapeMesh);
+      shapeMesh.number = this.circles.length;
+    } else if (shapeMesh.name === "Ellipse") {
+      this.ellipses.push(shapeMesh);
+      shapeMesh.number = this.ellipses.length;
+    } else if (shapeMesh.name === "Polyline") {
+      this.polylines.push(shapeMesh);
+      shapeMesh.number = this.polylines.length;
+    }
+
     this.shapes.push(shapeMesh);
   }
+
+  // updateShapeNumbers() {
+  //   // Re-index each shape list
+  //   this.lines.forEach((shape, index) => { shape.number = index + 1 });
+  //   this.circles.forEach((shape, index) => { shape.number = index + 1 });
+  //   this.ellipses.forEach((shape, index) => { shape.number = index + 1 });
+  //   this.polylines.forEach((shape, index) => { shape.number = index + 1 });
+  // }
 
   resetShapes() {
     this.shapes = [];
@@ -34,6 +104,7 @@ class ShapeStore {
   setSelectedShape(shape) {
     this.selectedShape = shape;
   }
+
   setEllipseRadius(uuid, radiusX, radiusY) {
     // Check if the ellipse already exists in the array by uuid
     const existingEllipse = this.ellipsesRadiusXY.find(
@@ -78,10 +149,96 @@ class ShapeStore {
     }
   }
 
+  //get shape number
+  //   getShapeNumberByName(shapeName) {
+  //     switch (shapeName) {
+  //         case 'Line':
+  //             return this.lines.length;
+  //         case 'Circle':
+  //             return this.circles.length;
+  //         case 'Ellipse':
+  //             return this.ellipses.length;
+  //         case 'Polyline':
+  //             return this.polylines.length;
+  //         default:
+  //             return 0;
+  //     }
+  // }
+
+  // Get the number of a specific shape by its name and uuid
+  getShapeNumberByNameAndUUID(shapeName, uuid) {
+    let shapeArray;
+
+    // Find the corresponding array of shapes
+    switch (shapeName) {
+      case "Line":
+        shapeArray = this.lines;
+        break;
+      case "Circle":
+        shapeArray = this.circles;
+        break;
+      case "Ellipse":
+        shapeArray = this.ellipses;
+        break;
+      case "Polyline":
+        shapeArray = this.polylines;
+        break;
+      default:
+        return null;
+    }
+
+    // Find the shape with the given uuid
+    const shape = shapeArray.find((s) => s.uuid === uuid);
+
+    if (shape) {
+      // Return the shape's position (index + 1) as the shape's number
+      return shapeArray.indexOf(shape) + 1;
+    }
+
+    return null; // Return null if no shape found with the given uuid
+  }
+
   // Remove a shape from the scene and dispose of its geometry/material
   removeEntity(entityId) {
+    // this.lines = this.lines.filter(s => s.uuid !== entityId);
+    // this.circles = this.circles.filter(s => s.uuid !== entityId);
+    // this.ellipses = this.ellipses.filter(s => s.uuid !== entityId);
+    // this.polylines = this.polylines.filter(s => s.uuid !== entityId);
+    // this.updateShapeNumbers();
+
+    //before changes
     const removeShape = this.shapes.find((e) => e.uuid == entityId);
     if (removeShape) {
+      // for number
+
+      if (removeShape.name === "Line") {
+        this.lines = this.lines.filter((shape) => shape.uuid !== entityId);
+      } else if (removeShape.name === "Circle") {
+        this.circles = this.circles.filter((shape) => shape.uuid !== entityId);
+      } else if (removeShape.name === "Ellipse") {
+        this.ellipses = this.ellipses.filter(
+          (shape) => shape.uuid !== entityId
+        );
+      } else if (removeShape.name === "Polyline") {
+        this.polylines = this.polylines.filter(
+          (shape) => shape.uuid !== entityId
+        );
+      }
+
+      this.lines.forEach((shape, index) => {
+        shape.number = index + 1;
+      });
+      this.circles.forEach((shape, index) => {
+        shape.number = index + 1;
+      });
+      this.ellipses.forEach((shape, index) => {
+        shape.number = index + 1;
+      });
+      this.polylines.forEach((shape, index) => {
+        shape.number = index + 1;
+      });
+
+      //
       if (this.scene) {
         this.scene.remove(removeShape); // Remove shape from the scene
       }
@@ -241,12 +398,13 @@ class ShapeStore {
   //
   saveAllEntity() {
     const shapesData = this.shapes.map((shape) => {
-      const { name, uuid, material, geometry } = shape;
+      const { name, uuid, number, material, geometry } = shape;
 
       // Default shared properties
       const sharedProperties = {
         name: name,
         uuid: uuid,
+        number: number,
         color: material.color.getHex(), // Color in hex
         opacity: material.opacity,
       };
@@ -369,6 +527,8 @@ class ShapeStore {
         });
         newShape = new THREE.Line(lineGeometry, lineMaterial);
         newShape.name = "Line";
+        this.lines.push(newShape);
+        newShape.number = this.lines.length;
       } else if (name === "Circle") {
         const circleGeometry = new THREE.CircleGeometry(
           specificProperties.circleRadius
@@ -384,6 +544,8 @@ class ShapeStore {
         // newShape.position.set(...specificProperties.circleCenter);
         newShape.rotation.x = -Math.PI * 0.5;
         newShape.name = "Circle";
+        this.circles.push(newShape);
+        newShape.number = this.circles.length;
       } else if (name === "Ellipse") {
         const ellipseGeometry = new THREE.EllipseCurve(
           0,
@@ -407,6 +569,8 @@ class ShapeStore {
         newShape.rotation.x = Math.PI * 0.5;
 
         newShape.name = "Ellipse";
+        this.ellipses.push(newShape);
+        newShape.number = this.ellipses.length;
         this.setEllipseRadius(
           newShape.uuid,
           specificProperties.Rx,
@@ -425,6 +589,8 @@ class ShapeStore {
         });
         newShape = new THREE.Line(polylineGeometry, polylineMaterial);
         newShape.name = "Polyline";
+        this.polylines.push(newShape);
+        newShape.number = this.polylines.length;
       }
 
       // Add the new shape to the scene and the shapes array

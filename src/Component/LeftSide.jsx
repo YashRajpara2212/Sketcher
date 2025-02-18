@@ -10,19 +10,29 @@ const LeftSide = observer(() => {
   const handleClick = (e) => {
     shapeStore.setEntity(e);
   };
+
+
+ 
   return (
-    <div className=" container absolute left-0 top-0 z-10 m-5  bg-gray-200 mx-3  min-h-[95vh] rounded-xl w-[25%]">
+    <div className=" container absolute left-0 top-0 z-10 m-5  bg-gray-200 mx-3  max-h-[95vh] overflow-auto rounded-xl w-[25%]">
       <div className="flex p-3 justify-between text-2xl">
         <div className="col-10">List Of Created Object</div>
         <div className=" pt-2 pe-2 col-2">
           <FiSearch />
         </div>
       </div>
-      <hr />
-      <div className="ms-15">
+      <hr className="mb-2" />
+      <div className="ms-15 me-2 mb-2">
         {shapes?.map((e) => (
           <div key={e.uuid} onClick={(event) => handleClick(e, event)}>
-            <ShapeInfoComponent shapeName={e.name} entityId={e.uuid} />
+            <ShapeInfoComponent
+              shapeName={e.name}
+              entityId={e.uuid}
+              shapeNumber={shapeStore.getShapeNumberByNameAndUUID(
+                e.name,
+                e.uuid
+              )}
+            />
           </div>
         ))}
       </div>
